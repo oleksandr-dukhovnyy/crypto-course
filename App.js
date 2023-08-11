@@ -162,7 +162,7 @@ export default function App() {
             list.length ? {} : styles['container--empty'],
           ]}
         >
-          <Navbar appName={AppJSON.expo.name} />
+          <Navbar appName={AppJSON.expo.name.replace(' ', '')} />
           <AddItemForm addItem={addItem} list={list} />
           <List list={list} removeItemFromList={removeItemFromList} />
         </View>
