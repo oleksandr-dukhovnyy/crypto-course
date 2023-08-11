@@ -29,7 +29,16 @@ const API = {
       url.searchParams.append('limit', limit);
     }
 
+    // const now = performance.now();
+
     const { data } = await fetch(url).then((res) => res.json());
+
+    // console.log(
+    //   `API.search timing (limit: ${limit}, loaded: ${
+    //     (data || []).length
+    //   }) ms: `,
+    //   (performance.now() - now).toFixed(3)
+    // );
 
     return data || [];
   },

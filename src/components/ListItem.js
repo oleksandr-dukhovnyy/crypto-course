@@ -102,7 +102,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
 
       {deletionConfirmation && (
         <View style={styles.absoluteFit}>
-          <AnimatedFadeIn style={styles.deleteContain}>
+          <AnimatedFadeIn style={styles.deleteContain} duration={100}>
             <View style={styles.deleteQuestion}>
               <Text>Remove</Text>
               <Text>

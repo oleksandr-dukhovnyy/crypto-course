@@ -4,8 +4,8 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { AnimatedFadeIn } from './Animated';
@@ -51,6 +51,8 @@ export const SearchbleInput = ({
     setView(value.length ? 'search' : 'list');
   }, [value]);
 
+  const keyExtractor = ({ id }) => id;
+
   return (
     <View style={styles.contain}>
       <View style={styles.form}>
@@ -60,7 +62,6 @@ export const SearchbleInput = ({
           onChangeText={setSearch}
           placeholder={placeholder}
         />
-
         {value ? (
           <AnimatedFadeIn duration={500}>
             <Button
@@ -82,47 +83,46 @@ export const SearchbleInput = ({
           {suggestions.length ? (
             <View style={styles.suggestionsList}>
               <Shadow
-                style={styles.shadow}
                 stretch
                 offset={[0, 5]}
                 startColor={'#00000030'}
                 disabled={!value.length}
               >
                 <View style={styles.suggestionsListContain}>
-                  <ScrollView>
-                    {suggestions.map((suggestion, i, arr) => {
-                      return (
-                        <View key={suggestion.id}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              suggestion.disabledText
-                                ? () => {}
-                                : selectItem(suggestion)
-                            }
-                          >
-                            <View style={styles.suggestionsListItem}>
-                              <Text
-                                style={{
-                                  opacity: suggestion.disabledText ? 0.3 : 1,
-                                }}
-                              >
-                                {`${suggestion.symbol} (${
-                                  suggestion.name
-                                }): $${(+suggestion.priceUsd).toFixed(5)}`}
-                              </Text>
+                  <FlatList
+                    data={suggestions}
+                    keyExtractor={keyExtractor}
+                    renderItem={({ item: suggestion, index: i }) => (
+                      <View key={suggestion.id}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            suggestion.disabledText
+                              ? () => {}
+                              : selectItem(suggestion)
+                          }
+                        >
+                          <View style={styles.suggestionsListItem}>
+                            <Text
+                              style={{
+                                opacity: suggestion.disabledText ? 0.3 : 1,
+                              }}
+                            >
+                              {`${suggestion.symbol} (${
+                                suggestion.name
+                              }): $${(+suggestion.priceUsd).toFixed(5)}`}
+                            </Text>
 
-                              {suggestion.disabledText ? (
-                                <Text>{suggestion.disabledText}</Text>
-                              ) : null}
-                            </View>
-                          </TouchableOpacity>
-                          {i < arr.length - 1 ? (
-                            <View style={styles.hr}></View>
-                          ) : null}
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
+                            {suggestion.disabledText ? (
+                              <Text>{suggestion.disabledText}</Text>
+                            ) : null}
+                          </View>
+                        </TouchableOpacity>
+                        {i < suggestions.length - 1 ? (
+                          <View style={styles.hr}></View>
+                        ) : null}
+                      </View>
+                    )}
+                  />
                 </View>
               </Shadow>
             </View>
@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 15,
-    flex: 1,
     height: 600,
   },
   suggestionsListItem: {
@@ -174,8 +173,8 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   suggestionsList: {
-    position: 'absolute',
-    top: 58,
+    position: 'relative',
+    top: 0,
     width: '100%',
     gap: 15,
   },
@@ -185,7 +184,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    flex: 1,
   },
   input: {
     backgroundColor: '#fff',

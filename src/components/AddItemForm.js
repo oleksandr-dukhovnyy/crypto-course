@@ -12,14 +12,14 @@ export const AddItemForm = ({ addItem, list = [], view, setView }) => {
     loading: false,
   });
 
-  const search = async (value) => {
+  const search = async (value, limit = searchLimit) => {
     setState({
       loading: true,
       list: [],
     });
 
     const searchResultList = await API.search(value, {
-      limit: searchLimit,
+      limit,
     });
 
     setState({
@@ -71,6 +71,8 @@ export const AddItemForm = ({ addItem, list = [], view, setView }) => {
         // showBottomLine={list.length}
         view={view}
         setView={setView}
+        onFocused={() => search('', 100)}
+        onBlured={() => setState({ list: [], loading: false })}
       />
     </View>
   );
