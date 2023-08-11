@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'space-between',
     flexDirection: 'row',
+    zIndex: 1,
   },
   flexRow: {
     flexDirection: 'row',

@@ -83,7 +83,7 @@ export const SearchbleInput = ({
                 disabled={!value.length}
               >
                 <View style={styles.suggestionsListContain}>
-                  <ScrollView>
+                  <ScrollView style={{ zIndex: 30 }}>
                     {suggestions.map((suggestion, i, arr) => {
                       return (
                         <View key={suggestion.id}>
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flex: 1,
     height: 600,
+    zIndex: 25,
   },
   suggestionsListItem: {
     padding: 15,
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   suggestionsList: {
     position: 'absolute',
     top: 58,
-    zIndex: 10,
+    zIndex: 20,
     width: '100%',
     gap: 15,
   },
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     flex: 1,
-    zIndex: 5,
+    zIndex: 15,
   },
   input: {
     backgroundColor: '#fff',
