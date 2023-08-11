@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Crypto Cource",
-    "slug": "react-native-expo-app",
+    "slug": "crypto-cource",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,6 +23,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "987cb39f-d549-41c4-a424-f392060f6c64"
+      }
+    },
+    "owner": "aleksandr-js-developer"
   }
 }
