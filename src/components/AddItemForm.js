@@ -67,7 +67,7 @@ export const AddItemForm = ({ addItem, list = [] }) => {
         onSelected={onSelected}
         suggestions={state.list}
         loading={state.loading}
-        cleanSearchResults={() => setState({ loading: false, list: [] })}
+        cleanSearchResults={setState.bind(null, { loading: false, list: [] })}
         showBottomLine={list.length}
       />
     </View>

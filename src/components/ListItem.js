@@ -119,7 +119,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
                 <Text style={{ color: '#bbb' }}>No</Text>
               </Button>
               <Button
-                onClick={() => removeItemFromList(listItem.id)}
+                onClick={removeItemFromList.bind(null, listItem.id)}
                 style={styles.btnBorder}
               >
                 <Text style={{ color: RED }}>Yes</Text>

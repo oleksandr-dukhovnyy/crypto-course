@@ -98,7 +98,7 @@ export default function App() {
       _diff: 0,
     };
 
-    const newList = [newItem, ...list];
+    const newList = [...list, newItem];
     setList(newList);
 
     watchPrices(newList);
