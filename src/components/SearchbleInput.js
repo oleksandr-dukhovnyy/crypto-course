@@ -100,8 +100,8 @@ export const SearchbleInput = ({
                                   opacity: suggestion.disabledText ? 0.3 : 1,
                                 }}
                               >
-                                {`${suggestion.name} (${
-                                  suggestion.symbol
+                                {`${suggestion.symbol} (${
+                                  suggestion.name
                                 }): $${(+suggestion.priceUsd).toFixed(5)}`}
                               </Text>
 

@@ -57,7 +57,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
                 minWidth: 250,
               }}
             >
-              {listItem.name} ({listItem.symbol})
+              {listItem.symbol} ({listItem.name})
             </Text>
           </View>
           <View>

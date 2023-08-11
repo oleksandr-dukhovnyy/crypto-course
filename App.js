@@ -7,6 +7,7 @@ import { List } from './src/components/List.js';
 import AppJSON from './app.json';
 import API from './src/utils/API.js';
 import store from './src/utils/store.js';
+import normalizeAssetList from './src/utils/normalizeAssetList.js';
 
 /*
   ASSET EXAMPLE
@@ -30,12 +31,17 @@ import store from './src/utils/store.js';
   _diff and _freshData - is a local fields
 */
 
+const defaultAssets = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin'];
+
+const LIST_STORE_KEY = 'list';
+const FIRST_BOOT_KEY = 'booted-before.v4';
+
 export default function App() {
   const [list, setList] = useState([]);
 
   const updateListInStore = (newList) => {
     return store.save(
-      'list',
+      LIST_STORE_KEY,
       JSON.stringify(
         newList.map((item) => {
           // reset local fields
@@ -116,30 +122,42 @@ export default function App() {
   };
 
   useEffect(() => {
-    store.get('list').then((list) => {
-      const storredList = JSON.parse(list || '[]');
+    const loadItemsFromStore = () => {
+      store.get(LIST_STORE_KEY).then((list) => {
+        const storredList = JSON.parse(list || '[]');
 
-      setList(storredList);
+        setList(storredList);
 
-      if (!storredList.length) return;
+        if (!storredList.length) return;
 
-      API.getItemsData(storredList.map(({ id }) => id)).then((data) => {
-        const updatedList = data.map((item) => {
-          const newItem = {
-            ...item,
-            priceUsd: (+item.priceUsd).toFixed(2),
-            changePercent24Hr: (+item.changePercent24Hr).toFixed(4),
-            _freshData: true,
-            _diff: 0,
-          };
+        API.getItemsData(storredList.map(({ id }) => id)).then((data) => {
+          const updatedList = normalizeAssetList(data);
 
-          return newItem;
+          setList(updatedList);
+          watchPrices(updatedList);
         });
-
-        setList(updatedList);
-        watchPrices(updatedList);
       });
-    });
+    };
+
+    if (!defaultAssets.length) {
+      loadItemsFromStore();
+    } else {
+      store.get(FIRST_BOOT_KEY).then((res) => {
+        if (res !== '1') {
+          store.save(FIRST_BOOT_KEY, '1');
+
+          API.getItemsData(defaultAssets).then((list) => {
+            const defaultList = normalizeAssetList(list);
+
+            updateListInStore(defaultList);
+            setList(defaultList);
+            watchPrices(defaultList);
+          });
+        } else {
+          loadItemsFromStore();
+        }
+      });
+    }
 
     return closeSocket;
   }, []);
@@ -163,7 +181,7 @@ export default function App() {
             list.length ? {} : styles['container--empty'],
           ]}
         >
-          <Navbar appName={AppJSON.expo.name.replace(' ', '')} />
+          <Navbar appName={AppJSON.expo.name} />
           <AddItemForm addItem={addItem} list={list} />
           <List list={list} removeItemFromList={removeItemFromList} />
         </SafeAreaView>
