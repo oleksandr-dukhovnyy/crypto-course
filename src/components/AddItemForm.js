@@ -4,7 +4,7 @@ import { SearchbleInput } from './SearchbleInput.js';
 import API from '../utils/API';
 
 const searchLimit = 20;
-const searchDebounceTimeout = 2000;
+// const searchDebounceTimeout = 2000;
 
 export const AddItemForm = ({ addItem, list = [] }) => {
   const [state, setState] = useState({
@@ -68,6 +68,7 @@ export const AddItemForm = ({ addItem, list = [] }) => {
         suggestions={state.list}
         loading={state.loading}
         cleanSearchResults={() => setState({ loading: false, list: [] })}
+        showBottomLine={list.length}
       />
     </View>
   );

@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ListItem } from './ListItem';
 
 export const List = ({ list: _list = [], removeItemFromList }) => {

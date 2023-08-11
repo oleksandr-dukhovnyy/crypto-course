@@ -21,6 +21,7 @@ export const SearchbleInput = ({
   style,
   loading,
   cleanSearchResults,
+  showBottomLine = false,
 }) => {
   const [value, setValue] = useState('');
 
@@ -137,7 +138,11 @@ export const SearchbleInput = ({
                 </>
               )}
 
-              <View style={[styles.hr, { backgroundColor: '#fff' }]}></View>
+              <View
+                style={
+                  showBottomLine ? [styles.hr, { backgroundColor: '#fff' }] : []
+                }
+              ></View>
             </>
           )}
         </>

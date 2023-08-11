@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AddItemForm } from './src/components/AddItemForm.js';
 import { Navbar } from './src/components/Navbar.js';
