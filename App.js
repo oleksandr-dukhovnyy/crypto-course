@@ -6,7 +6,7 @@ import { Navbar } from './src/components/Navbar.js';
 import { List } from './src/components/List.js';
 import AppJSON from './app.json';
 import API from './src/utils/API.js';
-import store from 'react-native-simple-store';
+import store from './src/utils/store.js';
 
 /*
   ASSET EXAMPLE
@@ -118,6 +118,7 @@ export default function App() {
   useEffect(() => {
     store.get('list').then((list) => {
       const storredList = JSON.parse(list || '[]');
+
       setList(storredList);
 
       if (!storredList.length) return;
