@@ -145,7 +145,7 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <LinearGradient
         colors={[
           'rgba(255,183,63,1)',
@@ -157,7 +157,7 @@ export default function App() {
         end={{ x: 1, y: 1 }}
         style={styles.background}
       >
-        <View
+        <SafeAreaView
           style={[
             styles.container,
             list.length ? {} : styles['container--empty'],
@@ -166,9 +166,9 @@ export default function App() {
           <Navbar appName={AppJSON.expo.name.replace(' ', '')} />
           <AddItemForm addItem={addItem} list={list} />
           <List list={list} removeItemFromList={removeItemFromList} />
-        </View>
+        </SafeAreaView>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
     borderRadius: 15,
+    paddingTop: 20,
     gap: 15,
     flexDirection: 'column',
   },

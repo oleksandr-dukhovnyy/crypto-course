@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   suggestionsList: {
     position: 'absolute',
     top: 58,
-    zIndex: 1,
+    zIndex: 10,
     width: '100%',
     gap: 15,
   },
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     flex: 1,
+    zIndex: 5,
   },
   input: {
     backgroundColor: '#fff',
