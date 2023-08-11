@@ -215,10 +215,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   'container--empty': {
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // marginTop: '50%',
-    // flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '50%',
+    flex: 1,
   },
   text: {
     color: '#fff',
