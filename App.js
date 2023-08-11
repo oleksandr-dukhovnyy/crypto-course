@@ -33,9 +33,7 @@ import store from 'react-native-simple-store';
 export default function App() {
   const [list, setList] = useState([]);
 
-  const updateListInStore = (newList, source = '') => {
-    console.log('updateListInStore', source);
-
+  const updateListInStore = (newList) => {
     return store.save(
       'list',
       JSON.stringify(
@@ -83,7 +81,7 @@ export default function App() {
       clearTimeout(updatePricesTimeoutId);
 
       updatePricesTimeoutId = setTimeout(() => {
-        updateListInStore(newList, 'updatePrices');
+        updateListInStore(newList);
       }, 5000);
 
       return newList;
@@ -105,7 +103,7 @@ export default function App() {
 
     watchPrices(newList);
 
-    await updateListInStore(newList, 'addItem');
+    await updateListInStore(newList);
   };
 
   const removeItemFromList = async (id) => {
@@ -113,23 +111,18 @@ export default function App() {
     const newList = list.filter((item) => item.id !== id);
 
     setList(newList);
-    await updateListInStore(newList, 'removeItemFromList');
+    await updateListInStore(newList);
     watchPrices();
   };
 
   useEffect(() => {
     store.get('list').then((list) => {
       const storredList = JSON.parse(list || '[]');
-
-      console.log('store.get', storredList.length);
-
       setList(storredList);
 
       if (!storredList.length) return;
 
       API.getItemsData(storredList.map(({ id }) => id)).then((data) => {
-        console.log('data.length', data.length);
-
         const updatedList = data.map((item) => {
           const newItem = {
             ...item,
