@@ -34,10 +34,11 @@ import normalizeAssetList from './src/utils/normalizeAssetList.js';
 const defaultAssets = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin'];
 
 const LIST_STORE_KEY = 'list';
-const FIRST_BOOT_KEY = 'booted-before.v4';
+const FIRST_BOOT_KEY = 'booted-before.v5';
 
 export default function App() {
   const [list, setList] = useState([]);
+  const [view, setView] = useState('list'); // or 'search'
 
   const updateListInStore = (newList) => {
     return store.save(
@@ -182,8 +183,18 @@ export default function App() {
           ]}
         >
           <Navbar appName={AppJSON.expo.name} />
-          <AddItemForm addItem={addItem} list={list} />
-          <List list={list} removeItemFromList={removeItemFromList} />
+          <AddItemForm
+            addItem={addItem}
+            list={list}
+            view={view}
+            setView={setView}
+          />
+          <List
+            list={list}
+            removeItemFromList={removeItemFromList}
+            view={view}
+            setView={setView}
+          />
         </SafeAreaView>
       </LinearGradient>
     </View>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -21,7 +21,9 @@ export const SearchbleInput = ({
   style,
   loading,
   cleanSearchResults,
-  showBottomLine = false,
+  // showBottomLine = false,
+  view,
+  setView,
 }) => {
   const [value, setValue] = useState('');
 
@@ -45,6 +47,10 @@ export const SearchbleInput = ({
     clearValue();
   };
 
+  useEffect(() => {
+    setView(value.length ? 'search' : 'list');
+  }, [value]);
+
   return (
     <View style={styles.contain}>
       <View style={styles.form}>
@@ -60,7 +66,7 @@ export const SearchbleInput = ({
             <Button
               style={{
                 backgroundColor: 'transparent',
-                paddingRight: 0,
+                paddingRight: 10,
                 paddingLeft: 15,
               }}
               onClick={clearValue}
@@ -71,7 +77,7 @@ export const SearchbleInput = ({
         ) : null}
       </View>
 
-      {value.length ? (
+      {value.length && view === 'search' ? (
         <>
           {suggestions.length ? (
             <View style={styles.suggestionsList}>
@@ -83,7 +89,7 @@ export const SearchbleInput = ({
                 disabled={!value.length}
               >
                 <View style={styles.suggestionsListContain}>
-                  <ScrollView style={{ zIndex: 30 }}>
+                  <ScrollView>
                     {suggestions.map((suggestion, i, arr) => {
                       return (
                         <View key={suggestion.id}>
@@ -138,11 +144,11 @@ export const SearchbleInput = ({
                 </>
               )}
 
-              <View
+              {/* <View
                 style={
                   showBottomLine ? [styles.hr, { backgroundColor: '#fff' }] : []
                 }
-              ></View>
+              ></View> */}
             </>
           )}
         </>
@@ -159,7 +165,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flex: 1,
     height: 600,
-    zIndex: 25,
   },
   suggestionsListItem: {
     padding: 15,
@@ -171,7 +176,6 @@ const styles = StyleSheet.create({
   suggestionsList: {
     position: 'absolute',
     top: 58,
-    zIndex: 20,
     width: '100%',
     gap: 15,
   },
@@ -182,7 +186,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     flex: 1,
-    zIndex: 15,
   },
   input: {
     backgroundColor: '#fff',

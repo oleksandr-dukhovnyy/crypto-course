@@ -38,7 +38,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
   }, [listItem.priceUsd]);
 
   return (
-    <View style={{ position: 'relative', zIndex: 1 }}>
+    <View style={{ position: 'relative' }}>
       <View style={styles.listItem}>
         <View>
           <View
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    zIndex: 1,
   },
   flexRow: {
     flexDirection: 'row',

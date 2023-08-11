@@ -6,7 +6,7 @@ import API from '../utils/API';
 const searchLimit = 20;
 // const searchDebounceTimeout = 2000;
 
-export const AddItemForm = ({ addItem, list = [] }) => {
+export const AddItemForm = ({ addItem, list = [], view, setView }) => {
   const [state, setState] = useState({
     list: [],
     loading: false,
@@ -68,7 +68,9 @@ export const AddItemForm = ({ addItem, list = [] }) => {
         suggestions={state.list}
         loading={state.loading}
         cleanSearchResults={setState.bind(null, { loading: false, list: [] })}
-        showBottomLine={list.length}
+        // showBottomLine={list.length}
+        view={view}
+        setView={setView}
       />
     </View>
   );
@@ -79,6 +81,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 15,
     alignItems: 'center',
-    zIndex: 10,
+    zIndex: 1,
   },
 });
