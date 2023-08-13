@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
 import { AnimatedFadeIn } from './Animated';
@@ -38,6 +40,7 @@ export const SearchbleInput = (props: Props) => {
     setView,
   } = props;
   const [value, setValue] = useState('');
+  const inputRef = useRef<any>(null);
 
   const setSearch = (str: string) => {
     setValue(str);
@@ -68,12 +71,22 @@ export const SearchbleInput = (props: Props) => {
   return (
     <View style={styles.contain}>
       <View style={styles.form}>
-        <TextInput
-          value={value}
-          style={[styles.input, style]}
-          onChangeText={setSearch}
-          placeholder={placeholder}
-        />
+        <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
+          <View style={styles.input}>
+            <Image
+              style={styles.searchIcon}
+              source={require('../../assets/icons/search.png')}
+            />
+            <TextInput
+              ref={inputRef}
+              value={value}
+              style={style}
+              onChangeText={setSearch}
+              onEndEditing={() => inputRef.current.blur()}
+              placeholder={placeholder}
+            />
+          </View>
+        </TouchableWithoutFeedback>
         {value ? (
           <AnimatedFadeIn duration={500}>
             <Button style={styles.clearBtn} onClick={clearValue}>
@@ -193,9 +206,12 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#fff',
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
     borderRadius: 15,
     flex: 1,
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'center',
   },
   hr: {
     width: '100%',
@@ -213,5 +229,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingRight: 10,
     paddingLeft: 15,
+  },
+  searchIcon: {
+    width: 25,
+    height: 25,
   },
 });

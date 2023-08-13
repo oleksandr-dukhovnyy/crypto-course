@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { StyleSheet, SafeAreaView, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AddItemForm } from './src/components/AddItemForm';
 import { Navbar } from './src/components/Navbar';
@@ -168,6 +168,12 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar
+        animated={true}
+        backgroundColor="#61dafb"
+        showHideTransition={'fade'}
+        hidden={true}
+      />
       <LinearGradient
         colors={[
           'rgba(255,183,63,1)',
