@@ -109,10 +109,10 @@ export const ListItem = (props: Props) => {
           <AnimatedFadeIn style={styles.deleteContain} duration={100}>
             <>
               <View style={styles.deleteQuestion}>
-                <Text style={{ color: RED }}>Remove</Text>
+                <Text style={{ color: RED }}>Remove?</Text>
                 <Text>
                   <Text style={[{ fontWeight: '700' }, styles.deletionText]}>
-                    {listItem.name}
+                    {listItem.symbol} ({listItem.name})
                   </Text>
                 </Text>
               </View>
