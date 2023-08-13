@@ -1,28 +1,42 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { SearchbleInput } from './SearchbleInput.js';
+import { SearchbleInput } from './SearchbleInput';
 import API from '../utils/API';
 
 const searchLimit = 20;
 // const searchDebounceTimeout = 2000;
 
-export const AddItemForm = ({ addItem, list = [], view, setView }) => {
-  const [state, setState] = useState({
+interface IProps {
+  addItem(item: Asset.Item): void;
+  list: Asset.Item[];
+  view: App.View;
+  setView(view: App.View): void;
+}
+
+interface State {
+  list: Asset.Item[];
+  loading: boolean;
+}
+
+export const AddItemForm = (props: IProps) => {
+  const { addItem, list = [], view, setView } = props;
+
+  const [state, setState] = useState<State>({
     list: [],
     loading: false,
   });
 
-  const search = async (value, limit = searchLimit) => {
+  const search = async (value: string, limit = searchLimit) => {
     setState({
       loading: true,
       list: [],
     });
 
-    const searchResultList = await API.search(value, {
+    const searchResultList: Asset.APIResponseItem[] = await API.search(value, {
       limit,
     });
 
-    setState({
+    const newState: State = {
       loading: false,
       list: searchResultList.map((item) => {
         const disabledText = list.some((_item) => item.id === _item.id)
@@ -32,14 +46,18 @@ export const AddItemForm = ({ addItem, list = [], view, setView }) => {
         return {
           ...item,
           priceUsd: (+item.priceUsd).toFixed(2),
+          _diff: 0,
+          _freshData: true,
           disabledText,
         };
       }),
-    });
+    };
+
+    setState(newState);
   };
 
-  const onSearch = async (value) => {
-    const trimmed = value.trim();
+  const onSearch = async (searchStr: string) => {
+    const trimmed = searchStr.trim();
 
     if (trimmed) {
       search(trimmed);
@@ -55,8 +73,8 @@ export const AddItemForm = ({ addItem, list = [], view, setView }) => {
     }
   };
 
-  const onSelected = (itemId) => {
-    addItem(itemId);
+  const onSelected = (item: Asset.Item) => {
+    addItem(item);
   };
 
   return (
@@ -68,11 +86,8 @@ export const AddItemForm = ({ addItem, list = [], view, setView }) => {
         suggestions={state.list}
         loading={state.loading}
         cleanSearchResults={setState.bind(null, { loading: false, list: [] })}
-        // showBottomLine={list.length}
         view={view}
         setView={setView}
-        onFocused={() => search('', 100)}
-        onBlured={() => setState({ list: [], loading: false })}
       />
     </View>
   );

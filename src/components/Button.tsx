@@ -1,11 +1,15 @@
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-export const Button = ({
-  onClick = () => {},
-  style = {},
-  children,
-  rounded = false,
-}) => {
+interface Props {
+  onClick?(): void;
+  style?: App.StylesList;
+  children?: JSX.Element;
+  rounded?: boolean;
+}
+
+export const Button = (props: Props) => {
+  const { onClick = () => {}, style = {}, children, rounded = false } = props;
+
   const raito = 0.12;
 
   const styles = StyleSheet.create({
@@ -34,11 +38,7 @@ export const Button = ({
   }
 
   return (
-    <TouchableOpacity
-      underlayColor="black"
-      onPress={onClick}
-      style={buttonStyles}
-    >
+    <TouchableOpacity onPress={onClick} style={buttonStyles}>
       <Text>{children}</Text>
     </TouchableOpacity>
   );

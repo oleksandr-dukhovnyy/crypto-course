@@ -9,11 +9,17 @@ const RED = '#fe0000';
 const BLACK = '#000';
 const removeConfirmationHideTimeout = 6000;
 
-export const ListItem = ({ listItem, removeItemFromList }) => {
+interface Props {
+  listItem: Asset.Item;
+  removeItemFromList(id: string): void;
+}
+
+export const ListItem = (props: Props) => {
+  const { listItem, removeItemFromList } = props;
   const [deletionConfirmation, setDeletionConfirmation] = useState(false);
   const [priceColor, setPriceColor] = useState(BLACK);
 
-  let timeoutId = null;
+  let timeoutId: undefined | number;
 
   const closeAskToDelete = () => {
     clearTimeout(timeoutId);
@@ -23,10 +29,13 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
   const askToDelete = () => {
     setDeletionConfirmation(true);
 
-    timeoutId = setTimeout(closeAskToDelete, removeConfirmationHideTimeout);
+    timeoutId = window.setTimeout(
+      closeAskToDelete,
+      removeConfirmationHideTimeout
+    );
   };
 
-  let priceTimeout = null;
+  let priceTimeout: undefined | number;
 
   useEffect(() => {
     setPriceColor(
@@ -34,7 +43,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
     );
 
     clearTimeout(priceTimeout);
-    priceTimeout = setTimeout(setPriceColor.bind(null, BLACK), 1200);
+    priceTimeout = window.setTimeout(setPriceColor.bind(null, BLACK), 1200);
   }, [listItem.priceUsd]);
 
   return (
@@ -50,7 +59,7 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
           >
             <Text
               style={{
-                fontWeight: 700,
+                fontWeight: '700',
                 fontSize: 17,
                 opacity: listItem._freshData ? 1 : 0.3,
                 flex: 1,
@@ -103,28 +112,30 @@ export const ListItem = ({ listItem, removeItemFromList }) => {
       {deletionConfirmation && (
         <View style={styles.absoluteFit}>
           <AnimatedFadeIn style={styles.deleteContain} duration={100}>
-            <View style={styles.deleteQuestion}>
-              <Text>Remove</Text>
-              <Text>
-                <Text style={[{ fontWeight: 700 }, styles.deletionText]}>
-                  {listItem.name}
+            <>
+              <View style={styles.deleteQuestion}>
+                <Text>Remove</Text>
+                <Text>
+                  <Text style={[{ fontWeight: '700' }, styles.deletionText]}>
+                    {listItem.name}
+                  </Text>
+                  ?
                 </Text>
-                ?
-              </Text>
-            </View>
-            <View
-              style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }}
-            >
-              <Button onClick={closeAskToDelete} style={styles.btnBorder}>
-                <Text style={{ color: '#bbb' }}>No</Text>
-              </Button>
-              <Button
-                onClick={removeItemFromList.bind(null, listItem.id)}
-                style={styles.btnBorder}
+              </View>
+              <View
+                style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }}
               >
-                <Text style={{ color: RED }}>Yes</Text>
-              </Button>
-            </View>
+                <Button onClick={closeAskToDelete} style={styles.btnBorder}>
+                  <Text style={{ color: '#bbb' }}>No</Text>
+                </Button>
+                <Button
+                  onClick={removeItemFromList.bind(null, listItem.id)}
+                  style={styles.btnBorder}
+                >
+                  <Text style={{ color: RED }}>Yes</Text>
+                </Button>
+              </View>
+            </>
           </AnimatedFadeIn>
         </View>
       )}

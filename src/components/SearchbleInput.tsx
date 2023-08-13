@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,21 +13,33 @@ import { Button } from './Button';
 
 const minSymbs = 2;
 
-export const SearchbleInput = ({
-  placeholder = '...',
-  onSearch,
-  suggestions /* { id: string, title: string, disabledText: string }[] */,
-  onSelected,
-  style,
-  loading,
-  cleanSearchResults,
-  // showBottomLine = false,
-  view,
-  setView,
-}) => {
+interface Props {
+  placeholder: string;
+  onSearch(searchStr: string): void;
+  suggestions: Asset.Item[];
+  onSelected(item: Asset.Item): void;
+  style?: App.StylesList;
+  loading: boolean;
+  cleanSearchResults(): void;
+  view: App.View;
+  setView(view: App.View): void;
+}
+
+export const SearchbleInput = (props: Props) => {
+  const {
+    placeholder = '...',
+    onSearch,
+    suggestions,
+    onSelected,
+    style,
+    loading,
+    cleanSearchResults,
+    view,
+    setView,
+  } = props;
   const [value, setValue] = useState('');
 
-  const setSearch = (str) => {
+  const setSearch = (str: string) => {
     setValue(str);
 
     if (str.trim().length >= minSymbs) {
@@ -42,7 +54,7 @@ export const SearchbleInput = ({
     cleanSearchResults();
   };
 
-  const selectItem = (suggestion) => {
+  const selectItem = (suggestion: Asset.Item) => {
     onSelected(suggestion);
     clearValue();
   };
@@ -51,7 +63,7 @@ export const SearchbleInput = ({
     setView(value.length ? 'search' : 'list');
   }, [value]);
 
-  const keyExtractor = ({ id }) => id;
+  const keyExtractor = ({ id }: Asset.Item) => id;
 
   return (
     <View style={styles.contain}>
@@ -80,7 +92,7 @@ export const SearchbleInput = ({
 
       {value.length && view === 'search' ? (
         <>
-          {suggestions.length ? (
+          {suggestions && suggestions.length ? (
             <View style={styles.suggestionsList}>
               <Shadow
                 stretch

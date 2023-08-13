@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AddItemForm } from './src/components/AddItemForm.js';
-import { Navbar } from './src/components/Navbar.js';
-import { List } from './src/components/List.js';
+import { AddItemForm } from './src/components/AddItemForm';
+import { Navbar } from './src/components/Navbar';
+import { List } from './src/components/List';
 import AppJSON from './app.json';
-import API from './src/utils/API.js';
-import store from './src/utils/store.js';
-import normalizeAssetList from './src/utils/normalizeAssetList.js';
+import API from './src/utils/API';
+import store from './src/utils/store';
+import normalizeAssetList from './src/utils/normalizeAssetList';
 
 /*
   ASSET EXAMPLE
@@ -37,10 +37,10 @@ const LIST_STORE_KEY = 'list';
 const FIRST_BOOT_KEY = 'booted-before.v5';
 
 export default function App() {
-  const [list, setList] = useState([]);
-  const [view, setView] = useState('list'); // or 'search'
+  const [list, setList] = useState<Asset.Item[]>([]);
+  const [view, setView] = useState<App.View>('list');
 
-  const updateListInStore = (newList) => {
+  const updateListInStore = (newList: Asset.Item[]) => {
     return store.save(
       LIST_STORE_KEY,
       JSON.stringify(
@@ -51,6 +51,7 @@ export default function App() {
             ...item,
             _diff: 0,
             _freshData: false,
+            disabledText: '',
           };
         })
       )
@@ -68,10 +69,10 @@ export default function App() {
     }
   };
 
-  let updatePricesTimeoutId = null;
+  let updatePricesTimeoutId: undefined | number;
 
-  const updatePrices = async (prices) => {
-    setList((prev) => {
+  const updatePrices = async (prices: Asset.NewPrices) => {
+    setList((prev: Asset.Item[]) => {
       const newList = prev.map((item) => {
         if (item.id in prices) {
           return {
@@ -87,7 +88,7 @@ export default function App() {
 
       clearTimeout(updatePricesTimeoutId);
 
-      updatePricesTimeoutId = setTimeout(() => {
+      updatePricesTimeoutId = window.setTimeout(() => {
         updateListInStore(newList);
       }, 5000);
 
@@ -95,7 +96,7 @@ export default function App() {
     });
   };
 
-  const addItem = async (item) => {
+  const addItem = async (item: Asset.Item) => {
     closeSocket();
 
     const newItem = {
@@ -113,7 +114,7 @@ export default function App() {
     await updateListInStore(newList);
   };
 
-  const removeItemFromList = async (id) => {
+  const removeItemFromList = async (id: string) => {
     closeSocket();
     const newList = list.filter((item) => item.id !== id);
 
@@ -131,12 +132,14 @@ export default function App() {
 
         if (!storredList.length) return;
 
-        API.getItemsData(storredList.map(({ id }) => id)).then((data) => {
-          const updatedList = normalizeAssetList(data);
+        API.getItemsData(storredList.map(({ id }: Asset.Item) => id)).then(
+          (data) => {
+            const updatedList = normalizeAssetList(data);
 
-          setList(updatedList);
-          watchPrices(updatedList);
-        });
+            setList(updatedList);
+            watchPrices(updatedList);
+          }
+        );
       });
     };
 
@@ -193,7 +196,6 @@ export default function App() {
             list={list}
             removeItemFromList={removeItemFromList}
             view={view}
-            setView={setView}
           />
         </SafeAreaView>
       </LinearGradient>

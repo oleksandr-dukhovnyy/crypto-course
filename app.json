@@ -1,5 +1,8 @@
 {
   "expo": {
+    "experiments": {
+      "tsconfigPaths": true
+    },
     "name": "Crypto Cource",
     "slug": "crypto-cource",
     "version": "1.0.7",

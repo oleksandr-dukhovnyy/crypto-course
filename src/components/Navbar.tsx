@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native';
 
-export const Navbar = ({ appName }) => {
+export const Navbar = ({ appName }: { appName: string }) => {
   return (
     <View style={styles.navbar}>
       <Text style={styles.title}>{appName}</Text>

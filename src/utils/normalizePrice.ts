@@ -1,6 +1,6 @@
 import reverseString from './reverseString';
 
-const normalizePrice = (price) => {
+const normalizePrice = (price: string): string => {
   price = price.toString();
 
   const [a, b = ''] = price.split('.');

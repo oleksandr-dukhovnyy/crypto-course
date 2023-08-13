@@ -1,7 +1,12 @@
 let closePrevSockets = () => {};
 
 const API = {
-  async search(searchStr, { offset = 0, limit } = {}) {
+  async search(
+    searchStr: string,
+    options: { offset?: number; limit?: number } = {}
+  ) {
+    const { offset = 0, limit } = options;
+
     /*
       {
         "id": "bitcoin",
@@ -21,12 +26,12 @@ const API = {
     const url = new URL('https://api.coincap.io/v2/assets');
     url.searchParams.append('search', searchStr);
 
-    if (offset > 0) {
-      url.searchParams.append('offset', offset);
+    if (offset) {
+      url.searchParams.append('offset', '' + offset);
     }
 
     if (limit !== undefined && limit !== null) {
-      url.searchParams.append('limit', limit);
+      url.searchParams.append('limit', '' + limit);
     }
 
     // const now = performance.now();
@@ -42,7 +47,7 @@ const API = {
 
     return data || [];
   },
-  async getItemsData(itemsIdsList /* string[] */) {
+  async getItemsData(itemsIdsList: string[]) {
     const url =
       'https://api.coincap.io/v2/assets?ids=' + itemsIdsList.join(',');
 
@@ -50,7 +55,7 @@ const API = {
 
     return data.data || [];
   },
-  watchPrices(ids = [], callback = () => {}) {
+  watchPrices(ids: string[] = [], callback = (prices: Asset.NewPrices) => {}) {
     // ids = string[]
 
     closePrevSockets();
