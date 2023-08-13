@@ -7,6 +7,7 @@ import { AnimatedFadeIn } from './Animated';
 const GREEN = '#1dd648';
 const RED = '#fe0000';
 const BLACK = '#000';
+const GRAY = '#bbb';
 const removeConfirmationHideTimeout = 6000;
 
 interface Props {
@@ -50,13 +51,7 @@ export const ListItem = (props: Props) => {
     <View style={{ position: 'relative' }}>
       <View style={styles.listItem}>
         <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 4,
-              alignItems: 'center',
-            }}
-          >
+          <View style={styles.header}>
             <Text
               style={{
                 fontWeight: '700',
@@ -77,7 +72,7 @@ export const ListItem = (props: Props) => {
                 gap: 4,
               }}
             >
-              <Text style={{ color: '#bbb' }}>Price:</Text>
+              <Text style={styles.grayText}>Price:</Text>
               <Text
                 style={{
                   color: priceColor,
@@ -88,14 +83,14 @@ export const ListItem = (props: Props) => {
                 ${normalizePrice(listItem.priceUsd)}
               </Text>
             </View>
-            <Text style={{ color: '#bbb' }}>
+            <Text style={styles.grayText}>
               24h change: {listItem.changePercent24Hr}%
             </Text>
-            <Text style={{ color: '#bbb' }}>
+            <Text style={styles.grayText}>
               24h volume: $
               {normalizePrice((+listItem.volumeUsd24Hr).toFixed(3))}
             </Text>
-            <Text style={{ color: '#bbb' }}>
+            <Text style={styles.grayText}>
               Market cap: ${normalizePrice((+listItem.marketCapUsd).toFixed(3))}
             </Text>
           </View>
@@ -114,19 +109,16 @@ export const ListItem = (props: Props) => {
           <AnimatedFadeIn style={styles.deleteContain} duration={100}>
             <>
               <View style={styles.deleteQuestion}>
-                <Text>Remove</Text>
+                <Text style={{ color: RED }}>Remove</Text>
                 <Text>
                   <Text style={[{ fontWeight: '700' }, styles.deletionText]}>
                     {listItem.name}
                   </Text>
-                  ?
                 </Text>
               </View>
-              <View
-                style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }}
-              >
+              <View style={styles.deleteControlls}>
                 <Button onClick={closeAskToDelete} style={styles.btnBorder}>
-                  <Text style={{ color: '#bbb' }}>No</Text>
+                  <Text style={styles.grayText}>No</Text>
                 </Button>
                 <Button
                   onClick={removeItemFromList.bind(null, listItem.id)}
@@ -192,5 +184,18 @@ const styles = StyleSheet.create({
   },
   deleteQuestion: {
     flex: 1,
+  },
+  grayText: {
+    color: GRAY,
+  },
+  header: {
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+  },
+  deleteControlls: {
+    flexDirection: 'row',
+    gap: 15,
+    alignItems: 'center',
   },
 });

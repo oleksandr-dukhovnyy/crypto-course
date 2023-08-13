@@ -76,14 +76,7 @@ export const SearchbleInput = (props: Props) => {
         />
         {value ? (
           <AnimatedFadeIn duration={500}>
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                paddingRight: 10,
-                paddingLeft: 15,
-              }}
-              onClick={clearValue}
-            >
+            <Button style={styles.clearBtn} onClick={clearValue}>
               <Text style={styles.freeText}>clear</Text>
             </Button>
           </AnimatedFadeIn>
@@ -215,5 +208,10 @@ const styles = StyleSheet.create({
   freeText: {
     color: '#fff',
     fontSize: 15,
+  },
+  clearBtn: {
+    backgroundColor: 'transparent',
+    paddingRight: 10,
+    paddingLeft: 15,
   },
 });
