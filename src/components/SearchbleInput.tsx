@@ -114,9 +114,7 @@ export const SearchbleInput = (props: Props) => {
                       <View key={suggestion.id}>
                         <TouchableOpacity
                           onPress={() =>
-                            suggestion.disabledText
-                              ? () => {}
-                              : selectItem(suggestion)
+                            suggestion.disabledText ? () => {} : selectItem(suggestion)
                           }
                         >
                           <View style={styles.suggestionsListItem}>

@@ -30,18 +30,13 @@ export const ListItem = (props: Props) => {
   const askToDelete = () => {
     setDeletionConfirmation(true);
 
-    timeoutId = window.setTimeout(
-      closeAskToDelete,
-      removeConfirmationHideTimeout
-    );
+    timeoutId = window.setTimeout(closeAskToDelete, removeConfirmationHideTimeout);
   };
 
   let priceTimeout: undefined | number;
 
   useEffect(() => {
-    setPriceColor(
-      listItem._diff > 0 ? GREEN : listItem._diff < 0 ? RED : BLACK
-    );
+    setPriceColor(listItem._diff > 0 ? GREEN : listItem._diff < 0 ? RED : BLACK);
 
     clearTimeout(priceTimeout);
     priceTimeout = window.setTimeout(setPriceColor.bind(null, BLACK), 1200);
@@ -83,12 +78,9 @@ export const ListItem = (props: Props) => {
                 ${normalizePrice(listItem.priceUsd)}
               </Text>
             </View>
+            <Text style={styles.grayText}>24h change: {listItem.changePercent24Hr}%</Text>
             <Text style={styles.grayText}>
-              24h change: {listItem.changePercent24Hr}%
-            </Text>
-            <Text style={styles.grayText}>
-              24h volume: $
-              {normalizePrice((+listItem.volumeUsd24Hr).toFixed(3))}
+              24h volume: ${normalizePrice((+listItem.volumeUsd24Hr).toFixed(3))}
             </Text>
             <Text style={styles.grayText}>
               Market cap: ${normalizePrice((+listItem.marketCapUsd).toFixed(3))}

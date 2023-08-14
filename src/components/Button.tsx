@@ -23,9 +23,7 @@ export const Button = (props: Props) => {
     },
     rounded: {
       borderRadius:
-        Math.round(
-          Dimensions.get('window').width + Dimensions.get('window').height
-        ) / 2,
+        Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
       width: Dimensions.get('window').width * raito,
       height: Dimensions.get('window').width * raito,
     },

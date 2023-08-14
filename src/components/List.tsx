@@ -13,7 +13,7 @@ export const List = (props: Props) => {
   return view === 'list' ? (
     <ScrollView>
       <View style={styles.list}>
-        {list.map((listItem) => {
+        {list.map(listItem => {
           return (
             <ListItem
               key={listItem.id}

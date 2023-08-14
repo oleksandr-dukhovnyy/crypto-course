@@ -38,10 +38,8 @@ export const AddItemForm = (props: IProps) => {
 
     const newState: State = {
       loading: false,
-      list: searchResultList.map((item) => {
-        const disabledText = list.some((_item) => item.id === _item.id)
-          ? 'Added'
-          : '';
+      list: searchResultList.map(item => {
+        const disabledText = list.some(_item => item.id === _item.id) ? 'Added' : '';
 
         return {
           ...item,

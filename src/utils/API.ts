@@ -1,10 +1,7 @@
 let closePrevSockets = () => {};
 
 const API = {
-  async search(
-    searchStr: string,
-    options: { offset?: number; limit?: number } = {}
-  ) {
+  async search(searchStr: string, options: { offset?: number; limit?: number } = {}) {
     const { offset = 0, limit } = options;
 
     /*
@@ -36,7 +33,7 @@ const API = {
 
     // const now = performance.now();
 
-    const { data } = await fetch(url).then((res) => res.json());
+    const { data } = await fetch(url).then(res => res.json());
 
     // console.log(
     //   `API.search timing (limit: ${limit}, loaded: ${
@@ -48,10 +45,9 @@ const API = {
     return data || [];
   },
   async getItemsData(itemsIdsList: string[]) {
-    const url =
-      'https://api.coincap.io/v2/assets?ids=' + itemsIdsList.join(',');
+    const url = 'https://api.coincap.io/v2/assets?ids=' + itemsIdsList.join(',');
 
-    const data = await fetch(url).then((res) => res.json());
+    const data = await fetch(url).then(res => res.json());
 
     return data.data || [];
   },
@@ -60,9 +56,7 @@ const API = {
 
     closePrevSockets();
 
-    const pricesWs = new WebSocket(
-      'wss://ws.coincap.io/prices?assets=' + ids.join(',')
-    );
+    const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=' + ids.join(','));
 
     pricesWs.onmessage = function (msg) {
       callback(JSON.parse(msg.data));
