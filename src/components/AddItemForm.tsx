@@ -88,5 +88,6 @@ const styles = StyleSheet.create({
     gap: 15,
     alignItems: 'center',
     zIndex: 1,
+    marginBottom: 15,
   },
 });

@@ -15,7 +15,7 @@ const defaultAssets = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin'];
 const LIST_STORE_KEY = 'list';
 const FIRST_BOOT_KEY = 'booted-before.v5';
 
-const DEFAULT_ASSETS_COUNT = 100; // <=55 - no laggs
+const DEFAULT_ASSETS_COUNT = 20; // <=55 - no laggs
 
 export default function App() {
   const [list, setList] = useState<Asset.Item[]>([]);
