@@ -94,8 +94,8 @@ export const SearchbleInput = (props: Props) => {
   const selectItem = (suggestion: Asset.Item) => {
     // console.log('selectItem', suggestion);
 
+    cancelSearch();
     onSelected(suggestion);
-    clearValue();
   };
 
   // const onEndEditing = () => {
