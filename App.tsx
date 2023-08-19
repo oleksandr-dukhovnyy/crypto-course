@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, createContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, SafeAreaView, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AddItemForm } from './src/components/AddItemForm';
