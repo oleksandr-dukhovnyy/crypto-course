@@ -1,14 +1,16 @@
+import React, { useContext } from 'react';
+import { ViewContext, ListContext } from '../contexts';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { ListItem } from './ListItem';
 
 interface Props {
-  list: Asset.Item[];
   removeItemFromList(id: string): void;
-  view: App.View;
 }
 
 export const List = (props: Props) => {
-  const { list = [], removeItemFromList, view } = props;
+  const { removeItemFromList } = props;
+  const view = useContext(ViewContext);
+  const list = useContext(ListContext);
 
   return view === 'list' ? (
     <ScrollView>

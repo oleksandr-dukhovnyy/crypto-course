@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
-  FlatList,
+  // Keyboard,
   Image,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
-import { Shadow } from 'react-native-shadow-2';
 import { AnimatedFadeIn } from './Animated';
 import { Button } from './Button';
+import { SuggestionsList } from './SuggestionsLits';
+import { ViewContext, DefaultsListContext } from '../contexts';
 
 const minSymbs = 2;
 
@@ -23,9 +24,28 @@ interface Props {
   style?: App.StylesList;
   loading: boolean;
   cleanSearchResults(): void;
-  view: App.View;
   setView(view: App.View): void;
 }
+
+const Loading = ({ loading, value }: { loading: boolean; value: string }) => (
+  <>
+    {loading ? (
+      <Text style={styles.freeText}>Loading...</Text>
+    ) : (
+      <>
+        {value.trim().length >= minSymbs ? (
+          <Text style={styles.freeText}>
+            Data by query "{value.trim()}" was not found...
+          </Text>
+        ) : (
+          <Text style={styles.freeText}>
+            Enter more that {minSymbs} symbols to search
+          </Text>
+        )}
+      </>
+    )}
+  </>
+);
 
 export const SearchbleInput = (props: Props) => {
   const {
@@ -36,11 +56,19 @@ export const SearchbleInput = (props: Props) => {
     style,
     loading,
     cleanSearchResults,
-    view,
     setView,
   } = props;
   const [value, setValue] = useState('');
+  const [focused, setFocused] = useState(false);
   const inputRef = useRef<any>(null);
+
+  const view = useContext(ViewContext);
+  const defaultList = useContext(DefaultsListContext);
+
+  // TODO: Remove magic value (topOffset)
+  const topOffset = 185;
+
+  const suggestionsListHeight = Dimensions.get('window').height - topOffset;
 
   const setSearch = (str: string) => {
     setValue(str);
@@ -55,18 +83,38 @@ export const SearchbleInput = (props: Props) => {
   const clearValue = () => {
     setValue('');
     cleanSearchResults();
+    setFocused(false);
+    if (inputRef.current !== null) inputRef.current?.blur();
   };
 
   const selectItem = (suggestion: Asset.Item) => {
+    // console.log('selectItem', suggestion);
+
     onSelected(suggestion);
     clearValue();
   };
 
-  useEffect(() => {
-    setView(value.length ? 'search' : 'list');
-  }, [value]);
+  // const onEndEditing = () => {
+  // if (inputRef.current !== null) inputRef.current?.blur();
+  // setFocused(false);
+  // };
 
-  const keyExtractor = ({ id }: Asset.Item) => id;
+  const onFocus = () => {
+    setFocused(true);
+  };
+
+  // Keyboard.addListener('keyboardDidHide', () => {
+  //   if (inputRef.current !== null) inputRef.current?.blur();
+  //   setFocused(false);
+  // });
+
+  // Keyboard.addListener('keyboardDidShow', () => {
+  //   setFocused(true);
+  // });
+
+  useEffect(() => {
+    setView(focused ? 'search' : value.length ? 'search' : 'list');
+  }, [focused]);
 
   return (
     <View style={styles.contain}>
@@ -82,90 +130,37 @@ export const SearchbleInput = (props: Props) => {
               value={value}
               style={style}
               onChangeText={setSearch}
-              onEndEditing={() => inputRef.current.blur()}
+              // onEndEditing={onEndEditing}
+              onFocus={onFocus}
               placeholder={placeholder}
             />
           </View>
         </TouchableWithoutFeedback>
-        {value ? (
+        {focused ? (
           <AnimatedFadeIn duration={500}>
             <Button style={styles.clearBtn} onClick={clearValue}>
-              <Text style={styles.freeText}>clear</Text>
+              <Text style={styles.freeText}>{value.length ? 'clear' : 'close'}</Text>
             </Button>
           </AnimatedFadeIn>
         ) : null}
       </View>
 
-      {value.length && view === 'search' ? (
+      {view === 'search' ? (
         <>
-          {suggestions && suggestions.length ? (
-            <View style={styles.suggestionsList}>
-              <Shadow
-                stretch
-                offset={[0, 5]}
-                startColor={'#00000030'}
-                disabled={!value.length}
-              >
-                <View style={styles.suggestionsListContain}>
-                  <FlatList
-                    data={suggestions}
-                    keyExtractor={keyExtractor}
-                    renderItem={({ item: suggestion, index: i }) => (
-                      <View key={suggestion.id}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            suggestion.disabledText ? () => {} : selectItem(suggestion)
-                          }
-                        >
-                          <View style={styles.suggestionsListItem}>
-                            <Text
-                              style={{
-                                opacity: suggestion.disabledText ? 0.3 : 1,
-                              }}
-                            >
-                              {`${suggestion.symbol} (${
-                                suggestion.name
-                              }): $${(+suggestion.priceUsd).toFixed(5)}`}
-                            </Text>
-
-                            {suggestion.disabledText ? (
-                              <Text>{suggestion.disabledText}</Text>
-                            ) : null}
-                          </View>
-                        </TouchableOpacity>
-                        {i < suggestions.length - 1 ? (
-                          <View style={styles.hr}></View>
-                        ) : null}
-                      </View>
-                    )}
-                  />
-                </View>
-              </Shadow>
-            </View>
+          {suggestions.length > 0 ? (
+            <SuggestionsList
+              list={suggestions}
+              selectItem={selectItem}
+              height={suggestionsListHeight}
+            />
+          ) : !value.length ? (
+            <SuggestionsList
+              list={defaultList}
+              selectItem={selectItem}
+              height={suggestionsListHeight}
+            />
           ) : (
-            <>
-              {loading ? (
-                <Text style={styles.freeText}>Loading...</Text>
-              ) : (
-                <>
-                  {value.trim().length >= minSymbs ? (
-                    <Text style={styles.freeText}>
-                      Data by query "{value}" was not found...
-                    </Text>
-                  ) : (
-                    <Text style={styles.freeText}>
-                      Enter more that {minSymbs} symbols to search
-                    </Text>
-                  )}
-                </>
-              )}
-
-              {/* <View
-                style={
-                  showBottomLine ? [styles.hr, { backgroundColor: '#fff' }] : []
-                }
-              ></View> */}
-            </>
+            <Loading loading={loading} value={value} />
           )}
         </>
       ) : null}

@@ -1,8 +1,10 @@
 let closePrevSockets = () => {};
+import normalizeAssetList from './normalizeAssetList';
 
 const API = {
   async search(searchStr: string, options: { offset?: number; limit?: number } = {}) {
     const { offset = 0, limit } = options;
+    // console.log('API CALL: search', searchStr);
 
     /*
       {
@@ -45,6 +47,8 @@ const API = {
     return data || [];
   },
   async getItemsData(itemsIdsList: string[]) {
+    // console.log('API CALL: getItemsData', itemsIdsList);
+
     const url = 'https://api.coincap.io/v2/assets?ids=' + itemsIdsList.join(',');
 
     const data = await fetch(url).then(res => res.json());
@@ -52,6 +56,8 @@ const API = {
     return data.data || [];
   },
   watchPrices(ids: string[] = [], callback = (prices: Asset.NewPrices) => {}) {
+    // console.log('watchPrices', ids);
+
     // ids = string[]
 
     closePrevSockets();
@@ -65,6 +71,18 @@ const API = {
     closePrevSockets = () => pricesWs.close();
 
     return () => pricesWs.close();
+  },
+
+  loadMarketsDiffs() {
+    // /assets/{{id}}/markets
+  },
+
+  loadTopAssets(limit: number = 100): Promise<Asset.Item[] | null> {
+    // console.log('API CALL: loadTopAssets');
+
+    return fetch(`https://api.coincap.io/v2/assets?limit=${limit}`)
+      .then(res => res.json())
+      .then(({ data }) => normalizeAssetList(data));
   },
 };
 

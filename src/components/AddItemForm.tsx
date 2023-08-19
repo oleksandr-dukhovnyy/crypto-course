@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SearchbleInput } from './SearchbleInput';
 import API from '../utils/API';
+import { markAlreadyAddeds } from '../utils/markAlreadyAddeds';
+import normalizeAssetList from '../utils/normalizeAssetList';
+import { ListContext } from '../contexts';
 
 const searchLimit = 20;
 // const searchDebounceTimeout = 2000;
 
 interface IProps {
   addItem(item: Asset.Item): void;
-  list: Asset.Item[];
-  view: App.View;
   setView(view: App.View): void;
 }
 
@@ -19,7 +20,8 @@ interface State {
 }
 
 export const AddItemForm = (props: IProps) => {
-  const { addItem, list = [], view, setView } = props;
+  const { addItem, setView } = props;
+  const list = useContext(ListContext);
 
   const [state, setState] = useState<State>({
     list: [],
@@ -38,17 +40,7 @@ export const AddItemForm = (props: IProps) => {
 
     const newState: State = {
       loading: false,
-      list: searchResultList.map(item => {
-        const disabledText = list.some(_item => item.id === _item.id) ? 'Added' : '';
-
-        return {
-          ...item,
-          priceUsd: (+item.priceUsd).toFixed(2),
-          _diff: 0,
-          _freshData: true,
-          disabledText,
-        };
-      }),
+      list: markAlreadyAddeds(normalizeAssetList(searchResultList), list),
     };
 
     setState(newState);
@@ -84,7 +76,6 @@ export const AddItemForm = (props: IProps) => {
         suggestions={state.list}
         loading={state.loading}
         cleanSearchResults={setState.bind(null, { loading: false, list: [] })}
-        view={view}
         setView={setView}
       />
     </View>
