@@ -80,11 +80,15 @@ export const SearchbleInput = (props: Props) => {
     }
   };
 
-  const clearValue = () => {
+  const cancelSearch = () => {
     setValue('');
     cleanSearchResults();
     setFocused(false);
     if (inputRef.current !== null) inputRef.current?.blur();
+  };
+
+  const clearValue = () => {
+    setValue('');
   };
 
   const selectItem = (suggestion: Asset.Item) => {
@@ -118,7 +122,7 @@ export const SearchbleInput = (props: Props) => {
 
   return (
     <View style={styles.contain}>
-      <View style={styles.form}>
+      <View style={[styles.form, focused ? {} : { paddingRight: 15 }]}>
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
           <View style={styles.input}>
             <Image
@@ -138,7 +142,10 @@ export const SearchbleInput = (props: Props) => {
         </TouchableWithoutFeedback>
         {focused ? (
           <AnimatedFadeIn duration={500}>
-            <Button style={styles.clearBtn} onClick={clearValue}>
+            <Button
+              style={styles.clearBtn}
+              onClick={() => (value.length ? clearValue() : cancelSearch())}
+            >
               <Text style={styles.freeText}>{value.length ? 'clear' : 'close'}</Text>
             </Button>
           </AnimatedFadeIn>
@@ -213,6 +220,7 @@ const styles = StyleSheet.create({
   },
   form: {
     flexDirection: 'row',
+    paddingLeft: 15,
   },
   freeText: {
     color: '#fff',

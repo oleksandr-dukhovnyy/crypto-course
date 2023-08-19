@@ -5,7 +5,7 @@
     },
     "name": "Crypto Cource",
     "slug": "crypto-cource",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
