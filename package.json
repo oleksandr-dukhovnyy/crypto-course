@@ -1,6 +1,6 @@
 {
   "name": "crypto-course",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "ts:check": "tsc",
@@ -33,5 +33,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-native": "^4.0.0"
   },
-  "private": true
+  "private": true,
+  "license": "Apache-2.0"
 }

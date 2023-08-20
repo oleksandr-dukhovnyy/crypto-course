@@ -4,7 +4,12 @@
 
 - [Download .apk build (android, 25.4 MB)](https://github.com/Aleksandr-JS-Developer)
 
-<img src="./docs/screenshot-v1.2.4.jpeg" alt="Main app screen" height="700">
+<img src="./docs/screenshot-1.jpg" alt="app screenshot" height="500">
+<img src="./docs/screenshot-2.jpg" alt="app screenshot" height="500">
+<img src="./docs/screenshot-3.jpg" alt="app screenshot" height="500">
+<img src="./docs/screenshot-4.jpg" alt="app screenshot" height="500">
+<img src="./docs/screenshot-5.jpg" alt="app screenshot" height="500">
+<img src="./docs/screenshot-6.jpg" alt="app screenshot" height="500">
 
 ---
 
