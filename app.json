@@ -5,7 +5,7 @@
     },
     "name": "Crypto Cource",
     "slug": "crypto-cource",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/adaptive-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.aleksandrjsdeveloper.cryptocource"
+      "package": "com.aleksandrjsdeveloper.cryptocource",
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/logo.png",

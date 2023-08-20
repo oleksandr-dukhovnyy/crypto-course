@@ -125,10 +125,17 @@ export const SearchbleInput = (props: Props) => {
       <View style={[styles.form, focused ? {} : { paddingRight: 15 }]}>
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
           <View style={styles.input}>
-            <Image
-              style={styles.searchIcon}
-              source={require('../../assets/icons/search.png')}
-            />
+            {focused ? (
+              <Image
+                style={styles.searchIcon}
+                source={require(`../../assets/icons/search-active.png`)}
+              />
+            ) : (
+              <Image
+                style={styles.searchIcon}
+                source={require(`../../assets/icons/search.png`)}
+              />
+            )}
             <TextInput
               ref={inputRef}
               value={value}
@@ -150,6 +157,13 @@ export const SearchbleInput = (props: Props) => {
             </Button>
           </AnimatedFadeIn>
         ) : null}
+      </View>
+
+      <View style={{ alignItems: 'flex-start', width: '100%' }}>
+        <Text>view: {view}</Text>
+        <Text>suggestions.length: {suggestions.length}</Text>
+        <Text>value.length: {value.length}</Text>
+        <Text>defaultList.length: {defaultList.length}</Text>
       </View>
 
       {view === 'search' ? (
