@@ -4,6 +4,10 @@ type Logger = (log: App.Log) => void;
 
 export const log = (log: App.Log) => {
   logs.push(log);
+
+  if (logs.length > 50) {
+    logs.splice(0, 3);
+  }
 };
 
 export const getLogs = (): Readonly<App.Log[]> => logs;

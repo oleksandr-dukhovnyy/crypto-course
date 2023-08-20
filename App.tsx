@@ -156,12 +156,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadTopAssets();
-
-    if (!defaultAssets.length) {
-      loadItemsFromStore();
-    } else {
-      store.get(FIRST_BOOT_KEY).then(res => {
+    store.get(FIRST_BOOT_KEY).then(res => {
+      loadTopAssets().finally(() => {
         if (res !== '1') {
           store.save(FIRST_BOOT_KEY, '1');
 
@@ -176,7 +172,7 @@ export default function App() {
           loadItemsFromStore();
         }
       });
-    }
+    });
 
     return closeSocket;
   }, []);
