@@ -17,14 +17,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aleksandrjsdeveloper.cryptocourse"
+      "bundleIdentifier": "com.aleksandrjsdeveloper.cryptocource"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.aleksandrjsdeveloper.cryptocourse",
+      "package": "com.aleksandrjsdeveloper.cryptocource",
       "permissions": []
     },
     "web": {
