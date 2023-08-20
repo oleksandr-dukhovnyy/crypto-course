@@ -1,5 +1,5 @@
 {
-  "name": "crypto-cource",
+  "name": "crypto-course",
   "version": "1.2.5",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {

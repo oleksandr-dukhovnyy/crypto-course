@@ -29,6 +29,9 @@ export const AddItemForm = (props: IProps) => {
   });
 
   const search = async (value: string, limit = searchLimit) => {
+    // Ignore commands
+    if (value.startsWith(':')) return;
+
     setState({
       loading: true,
       list: [],
@@ -70,7 +73,7 @@ export const AddItemForm = (props: IProps) => {
   return (
     <View style={styles.contain}>
       <SearchbleInput
-        placeholder="start typing crypto name or symbol..."
+        placeholder="search and add a new Crypto Course"
         onSearch={onSearch}
         onSelected={onSelected}
         suggestions={state.list}

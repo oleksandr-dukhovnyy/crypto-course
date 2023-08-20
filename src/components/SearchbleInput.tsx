@@ -13,6 +13,7 @@ import { AnimatedFadeIn } from './Animated';
 import { Button } from './Button';
 import { SuggestionsList } from './SuggestionsLits';
 import { ViewContext, DefaultsListContext } from '../contexts';
+import { getLogs } from '../utils/logs';
 
 const minSymbs = 2;
 
@@ -120,6 +121,24 @@ export const SearchbleInput = (props: Props) => {
     setView(focused ? 'search' : value.length ? 'search' : 'list');
   }, [focused]);
 
+  useEffect(() => {
+    if (value === ':logstat') {
+      alert(
+        getLogs()
+          .map(log => {
+            const trace = typeof log.trace === 'string' ? [log.trace] : log.trace || [''];
+
+            return `------------------------------------\n${(
+              log.type || 'info'
+            ).toUpperCase()}\n\n[trace]\n"${trace.join(
+              ' > ',
+            )}"\n\n[msg]\n${JSON.stringify(log.msg, null, 2)}`;
+          })
+          .join('\n\n'),
+      );
+    }
+  }, [value]);
+
   return (
     <View style={styles.contain}>
       <View style={[styles.form, focused ? {} : { paddingRight: 15 }]}>
@@ -159,12 +178,12 @@ export const SearchbleInput = (props: Props) => {
         ) : null}
       </View>
 
-      <View style={{ alignItems: 'flex-start', width: '100%' }}>
+      {/* <View style={{ alignItems: 'flex-start', width: '100%' }}>
         <Text>view: {view}</Text>
         <Text>suggestions.length: {suggestions.length}</Text>
         <Text>value.length: {value.length}</Text>
         <Text>defaultList.length: {defaultList.length}</Text>
-      </View>
+      </View> */}
 
       {view === 'search' ? (
         <>

@@ -10,6 +10,9 @@ import store from './src/utils/store';
 import { markAlreadyAddeds } from './src/utils/markAlreadyAddeds';
 import normalizeAssetList from './src/utils/normalizeAssetList';
 import { ListContext, DefaultsListContext, ViewContext } from './src/contexts';
+import { initModuleLogger } from './src/utils/logs';
+
+const log = initModuleLogger('App');
 
 const defaultAssets = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin'];
 const LIST_STORE_KEY = 'list';
@@ -128,9 +131,26 @@ export default function App() {
   };
 
   const loadTopAssets = () => {
+    log({
+      msg: 'loadTopAssets',
+      trace: ['loadTopAssets'],
+    });
+
     return API.loadTopAssets(DEFAULT_ASSETS_COUNT).then((_list: Asset.Item[] | null) => {
+      log({
+        msg: `_list ${_list !== null ? '!' : '='}== null`,
+        trace: ['loadTopAssets', 'then'],
+      });
+
       if (_list !== null) {
-        setDefaultList(markAlreadyAddeds(_list, list));
+        const marked = markAlreadyAddeds(_list, list);
+
+        log({
+          msg: `marked.length ${marked.length}`,
+          trace: ['loadTopAssets', 'then'],
+        });
+
+        setDefaultList(marked);
       }
     });
   };

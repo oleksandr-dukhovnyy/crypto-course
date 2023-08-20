@@ -30,4 +30,10 @@ declare namespace App {
   export interface StylesList {
     [key: string]: string | number;
   }
+
+  export interface Log {
+    msg: string;
+    type?: 'error' | 'info' | 'warn';
+    trace?: string | string[];
+  }
 }

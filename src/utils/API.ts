@@ -1,10 +1,20 @@
-let closePrevSockets = () => {};
 import normalizeAssetList from './normalizeAssetList';
+import { initModuleLogger } from './logs';
+
+const log = initModuleLogger('~/src/utils/API');
+
+let closePrevSockets = () => {};
 
 const API = {
   async search(searchStr: string, options: { offset?: number; limit?: number } = {}) {
     const { offset = 0, limit } = options;
     // console.log('API CALL: search', searchStr);
+
+    log({
+      msg: `search "${searchStr}"`,
+      trace: ['method search'],
+      type: 'info',
+    });
 
     /*
       {
@@ -47,6 +57,11 @@ const API = {
     return data || [];
   },
   async getItemsData(itemsIdsList: string[]) {
+    log({
+      msg: `getItemsData "${itemsIdsList.join(', ')}"`,
+      trace: ['method getItemsData'],
+      type: 'info',
+    });
     // console.log('API CALL: getItemsData', itemsIdsList);
 
     const url = 'https://api.coincap.io/v2/assets?ids=' + itemsIdsList.join(',');
@@ -56,8 +71,11 @@ const API = {
     return data.data || [];
   },
   watchPrices(ids: string[] = [], callback = (prices: Asset.NewPrices) => {}) {
-    // console.log('watchPrices', ids);
-
+    log({
+      msg: `watchPrices "${ids.join(', ')}"`,
+      trace: ['method watchPrices'],
+      type: 'info',
+    });
     // ids = string[]
 
     closePrevSockets();
@@ -79,10 +97,40 @@ const API = {
 
   loadTopAssets(limit: number = 100): Promise<Asset.Item[] | null> {
     // console.log('API CALL: loadTopAssets');
+    log({
+      msg: `loadTopAssets "limit: ${limit}"`,
+      trace: ['method loadTopAssets'],
+      type: 'info',
+    });
 
     return fetch(`https://api.coincap.io/v2/assets?limit=${limit}`)
-      .then(res => res.json())
-      .then(({ data }) => normalizeAssetList(data));
+      .then(res => {
+        log({
+          msg: `status ${res.status} (${res.statusText})`,
+          trace: ['method loadTopAssets', 'fetch', 'then'],
+          type: 'info',
+        });
+
+        return res.json();
+      })
+      .then(({ data }) => {
+        const _data = normalizeAssetList(data);
+
+        log({
+          msg: _data.map((item: Asset.Item) => item.id).join(', '),
+          trace: ['method loadTopAssets', 'fetch', 'then', 'then'],
+          type: 'info',
+        });
+
+        return data;
+      })
+      .catch(e => {
+        log({
+          msg: `data > ${JSON.stringify(e, null, 2)}`,
+          trace: ['method loadTopAssets', 'fetch', 'then', 'catch'],
+          type: 'error',
+        });
+      });
   },
 };
 
