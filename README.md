@@ -2,7 +2,7 @@
 
 (react-native, expo, typescript, metro, eas (CI), WebSocket, eslint, prettier, babel)
 
-- [Download .apk build (android, 25.4 MB)](https://github.com/Aleksandr-JS-Developer)
+- [Download .apk build (android, 26.0 MB)](https://github.com/Aleksandr-JS-Developer/crypto-course/releases/download/2.0.2/android-build.v2.0.2.apk)
 
 <img src="./docs/screenshot-1.jpg" alt="app screenshot" height="500">
 <img src="./docs/screenshot-2.jpg" alt="app screenshot" height="500">
