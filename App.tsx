@@ -11,6 +11,7 @@ import { markAlreadyAddeds } from './src/utils/markAlreadyAddeds';
 import normalizeAssetList from './src/utils/normalizeAssetList';
 import { ListContext, DefaultsListContext, ViewContext } from './src/contexts';
 import { initModuleLogger } from './src/utils/logs';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const log = initModuleLogger('App');
 
@@ -112,6 +113,14 @@ export default function App() {
     // setDefaultList(markAlreadyAddeds(defaultList, newList));
   };
 
+  const _setList = async (newList: Asset.Item[]) => {
+    setList(newList);
+    watchPrices();
+    await updateListInStore(newList);
+
+    console.log(123);
+  };
+
   // API
   const loadItemsFromStore = () => {
     store.get(LIST_STORE_KEY).then(list => {
@@ -182,36 +191,33 @@ export default function App() {
   }, [list]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <StatusBar
-        animated={true}
-        backgroundColor="#61dafb"
-        showHideTransition={'fade'}
-        hidden={true}
-      />
-      <LinearGradient
-        colors={['rgba(255,183,63,1)', 'rgba(230,103,255,1)', 'rgba(139,224,255,1)']}
-        locations={[0, 0.37, 1]}
-        start={{ x: 0.2, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.background}
-      >
-        <SafeAreaView
-          // style={[styles.container, list.length ? {} : styles['container--empty']]}
-          style={styles.container}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        <StatusBar animated={true} showHideTransition={'fade'} hidden={true} />
+        <LinearGradient
+          colors={['rgba(255,183,63,1)', 'rgba(230,103,255,1)', 'rgba(139,224,255,1)']}
+          locations={[0, 0.37, 1]}
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.background}
         >
-          <ListContext.Provider value={list}>
-            <DefaultsListContext.Provider value={defaultList}>
-              <ViewContext.Provider value={view}>
-                <Navbar appName={AppJSON.expo.name} />
-                <AddItemForm addItem={addItem} setView={setView} />
-                <List removeItemFromList={removeItemFromList} />
-              </ViewContext.Provider>
-            </DefaultsListContext.Provider>
-          </ListContext.Provider>
-        </SafeAreaView>
-      </LinearGradient>
-    </View>
+          <SafeAreaView
+            // style={[styles.container, list.length ? {} : styles['container--empty']]}
+            style={styles.container}
+          >
+            <ListContext.Provider value={list}>
+              <DefaultsListContext.Provider value={defaultList}>
+                <ViewContext.Provider value={view}>
+                  <Navbar appName={AppJSON.expo.name} />
+                  <AddItemForm addItem={addItem} setView={setView} />
+                  <List removeItemFromList={removeItemFromList} setList={_setList} />
+                </ViewContext.Provider>
+              </DefaultsListContext.Provider>
+            </ListContext.Provider>
+          </SafeAreaView>
+        </LinearGradient>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 

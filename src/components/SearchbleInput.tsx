@@ -122,20 +122,23 @@ export const SearchbleInput = (props: Props) => {
   }, [focused]);
 
   useEffect(() => {
-    if (value === ':logstat') {
-      alert(
-        getLogs()
-          .map(log => {
-            const trace = typeof log.trace === 'string' ? [log.trace] : log.trace || [''];
+    if (':logstat'.startsWith(value)) {
+      if (value === ':logstat') {
+        alert(
+          getLogs()
+            .map(log => {
+              const trace =
+                typeof log.trace === 'string' ? [log.trace] : log.trace || [''];
 
-            return `------------------------------------\n${(
-              log.type || 'info'
-            ).toUpperCase()}\n\n[trace]\n"${trace.join(
-              ' > ',
-            )}"\n\n[msg]\n${JSON.stringify(log.msg, null, 2)}`;
-          })
-          .join('\n\n'),
-      );
+              return `------------------------------------\n${(
+                log.type || 'info'
+              ).toUpperCase()}\n\n[trace]\n"${trace.join(
+                ' > ',
+              )}"\n\n[msg]\n${JSON.stringify(log.msg, null, 2)}`;
+            })
+            .join('\n\n'),
+        );
+      }
     }
   }, [value]);
 
@@ -177,13 +180,6 @@ export const SearchbleInput = (props: Props) => {
           </AnimatedFadeIn>
         ) : null}
       </View>
-
-      {/* <View style={{ alignItems: 'flex-start', width: '100%' }}>
-        <Text>view: {view}</Text>
-        <Text>suggestions.length: {suggestions.length}</Text>
-        <Text>value.length: {value.length}</Text>
-        <Text>defaultList.length: {defaultList.length}</Text>
-      </View> */}
 
       {view === 'search' ? (
         <>

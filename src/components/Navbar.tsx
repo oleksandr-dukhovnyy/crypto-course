@@ -11,6 +11,7 @@ export const Navbar = ({ appName }: { appName: string }) => {
 const styles = StyleSheet.create({
   navbar: {
     alignItems: 'center',
+    // marginBottom: 25,
   },
   title: {
     fontWeight: '900',
