@@ -21,27 +21,40 @@ const FIRST_BOOT_KEY = 'booted-before.v5';
 
 const DEFAULT_ASSETS_COUNT = 20; // <=55 - no laggs
 
+// const getId = (() => {
+//   let id = 0;
+//   return () => id++;
+// })();
+
 export default function App() {
   const [list, setList] = useState<Asset.Item[]>([]);
   const [defaultList, setDefaultList] = useState<Asset.Item[]>([]);
   const [view, setView] = useState<App.View>('list');
 
-  const updateListInStore = (newList: Asset.Item[]) => {
-    return store.save(
-      LIST_STORE_KEY,
-      JSON.stringify(
-        newList.map(item => {
-          // reset local fields
+  const updateListInStore = (newList: Asset.Item[], initiator: string = '-') => {
+    // const id = getId();
+    // console.log(`updateListInStore ${id} SAVING by [${initiator}]`);
+    // console.log('newLists\n', newList.map(listItem => listItem.id).join('\n'));
 
-          return {
-            ...item,
-            _diff: 0,
-            _freshData: false,
-            disabledText: '',
-          };
-        }),
-      ),
-    );
+    return store
+      .save(
+        LIST_STORE_KEY,
+        JSON.stringify(
+          newList.map(item => {
+            // reset local fields
+
+            return {
+              ...item,
+              _diff: 0,
+              _freshData: false,
+              disabledText: '',
+            };
+          }),
+        ),
+      )
+      .finally(() => {
+        // console.log(`updateListInStore ${id}: SAVED`);
+      });
   };
 
   let closeSocket = () => {};
@@ -58,28 +71,28 @@ export default function App() {
   let updatePricesTimeoutId: undefined | number;
 
   const updatePrices = async (prices: Asset.NewPrices) => {
-    setList((prev: Asset.Item[]) => {
-      const newList = prev.map(item => {
-        if (item.id in prices) {
-          return {
-            ...item,
-            priceUsd: prices[item.id],
-            _diff: +prices[item.id] - +item.priceUsd,
-            _freshData: true,
-          };
-        }
+    clearTimeout(updatePricesTimeoutId);
 
-        return item;
+    updatePricesTimeoutId = window.setTimeout(() => {
+      setList((prev: Asset.Item[]) => {
+        const newList = prev.map(item => {
+          if (item.id in prices) {
+            return {
+              ...item,
+              priceUsd: prices[item.id],
+              _diff: +prices[item.id] - +item.priceUsd,
+              _freshData: true,
+            };
+          }
+
+          return item;
+        });
+
+        updateListInStore(newList, 'updatePrices');
+
+        return newList;
       });
-
-      clearTimeout(updatePricesTimeoutId);
-
-      updatePricesTimeoutId = window.setTimeout(() => {
-        updateListInStore(newList);
-      }, 5000);
-
-      return newList;
-    });
+    }, 5000);
   };
 
   const addItem = async (item: Asset.Item) => {
@@ -99,7 +112,7 @@ export default function App() {
 
     setList(newList);
     watchPrices(newList);
-    await updateListInStore(newList);
+    await updateListInStore(newList, 'addItem');
     // setDefaultList(markAlreadyAddeds(defaultList, newList));
   };
 
@@ -108,7 +121,7 @@ export default function App() {
     const newList = list.filter(item => item.id !== id);
 
     setList(newList);
-    await updateListInStore(newList);
+    await updateListInStore(newList, 'removeItemFromList');
     watchPrices();
     // setDefaultList(markAlreadyAddeds(defaultList, newList));
   };
@@ -116,9 +129,7 @@ export default function App() {
   const _setList = async (newList: Asset.Item[]) => {
     setList(newList);
     watchPrices();
-    await updateListInStore(newList);
-
-    console.log(123);
+    await updateListInStore(newList, '_setList');
   };
 
   // API
@@ -173,7 +184,10 @@ export default function App() {
           API.getItemsData(defaultAssets).then(list => {
             const defaultList = normalizeAssetList(list);
 
-            updateListInStore(defaultList);
+            updateListInStore(
+              defaultList,
+              'useEffect > store.get > loadTopAssets.finally > API.getItemsData',
+            );
             setList(defaultList);
             watchPrices(defaultList);
           });

@@ -20,6 +20,7 @@ interface Props {
 const topOffset = 280; // 194
 const diff = Dimensions.get('window').height - topOffset;
 const listHeight: number = diff < 0 ? 0 : diff;
+const ICON_SIZE = 24;
 
 export const List = (props: Props) => {
   const { removeItemFromList } = props;
@@ -66,7 +67,7 @@ export const List = (props: Props) => {
         <TouchableWithoutFeedback onPress={() => setEditable(!editable)}>
           <Image
             source={require(`../../assets/icons/edit.png`)}
-            style={{ marginRight: 24 }}
+            style={{ marginRight: 24, height: ICON_SIZE, width: ICON_SIZE }}
           />
         </TouchableWithoutFeedback>
       </View>

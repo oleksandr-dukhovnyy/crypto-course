@@ -15,7 +15,11 @@ const GREEN = '#1dd648';
 const RED = '#fe0000';
 const BLACK = '#000';
 const GRAY = '#bbb';
-const PURPURE = '#e97fff';
+const DARK_GRAY = '#aaa';
+const LEFT_SIDE_TABLE_COLOR = DARK_GRAY;
+
+const DEFAULT_PRICE_COLOR = '#0082e5';
+
 const removeConfirmationHideTimeout = 6000;
 
 interface Props {
@@ -27,12 +31,13 @@ interface Props {
   removeItemFromList(id: string): void;
 }
 
-const DRAG_GAP = 24;
+const AREA = 12;
+const ICON_SIZE = 16;
 
 export const ListItem = (props: Props) => {
   const { listItem, removeItemFromList } = props;
   const [deletionConfirmation, setDeletionConfirmation] = useState(false);
-  const [priceColor, setPriceColor] = useState(BLACK);
+  const [priceColor, setPriceColor] = useState(DEFAULT_PRICE_COLOR);
 
   let timeoutId: undefined | number;
 
@@ -50,23 +55,34 @@ export const ListItem = (props: Props) => {
   let priceTimeout: undefined | number;
 
   useEffect(() => {
-    setPriceColor(listItem._diff > 0 ? GREEN : listItem._diff < 0 ? RED : BLACK);
+    setPriceColor(
+      listItem._diff > 0 ? GREEN : listItem._diff < 0 ? RED : DEFAULT_PRICE_COLOR,
+    );
 
     clearTimeout(priceTimeout);
-    priceTimeout = window.setTimeout(setPriceColor.bind(null, BLACK), 1200);
+    priceTimeout = window.setTimeout(setPriceColor.bind(null, DEFAULT_PRICE_COLOR), 1200);
   }, [listItem.priceUsd]);
 
   return (
     <TouchableWithoutFeedback onLongPress={props.toggleEditable}>
       <View style={styles.contain}>
         <View style={styles.listItem}>
-          <View style={{ flexDirection: 'row', gap: DRAG_GAP }}>
+          <View style={{ flexDirection: 'row', gap: 24 - AREA }}>
             {props.editable ? (
               <TouchableWithoutFeedback
                 onPressIn={props.drag}
                 style={styles.dragContainer}
               >
-                <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+                <View
+                  style={{
+                    marginTop: 'auto',
+                    marginBottom: 'auto',
+                    height: ICON_SIZE + 48, // 48
+                    width: ICON_SIZE + AREA * 2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Image
                     resizeMode="contain"
                     style={styles.dragIcon}
@@ -77,7 +93,7 @@ export const ListItem = (props: Props) => {
             ) : (
               <View
                 style={{
-                  width: styles.dragContainer.width,
+                  width: 0, //ICON_SIZE + AREA,
                 }}
               ></View>
             )}
@@ -91,6 +107,7 @@ export const ListItem = (props: Props) => {
                     opacity: listItem._freshData ? 1 : 0.3,
                     flex: 1,
                     minWidth: 250,
+                    // lineHeight: 17
                   }}
                 >
                   {listItem.symbol} ({listItem.name})
@@ -105,32 +122,46 @@ export const ListItem = (props: Props) => {
                     gap: 4,
                   }}
                 >
-                  <Text style={styles.grayText}>Price:</Text>
+                  <Text style={{ color: LEFT_SIDE_TABLE_COLOR }}>Price:</Text>
                   <Text
                     style={{
                       color: priceColor,
                       fontSize: 17,
+                      fontWeight: '700',
                       opacity: listItem._freshData ? 1 : 0.3,
                     }}
                   >
                     ${normalizePrice(listItem.priceUsd)}
                   </Text>
                 </View>
-                <Text style={styles.grayText}>
-                  24h change: {listItem.changePercent24Hr}%
+                <Text style={styles.contentText}>
+                  <Text style={{ color: LEFT_SIDE_TABLE_COLOR }}>24h change:</Text>{' '}
+                  {listItem.changePercent24Hr}%
                 </Text>
-                <Text style={styles.grayText}>
-                  24h volume: ${normalizePrice((+listItem.volumeUsd24Hr).toFixed(3))}
+                <Text style={styles.contentText}>
+                  <Text style={{ color: LEFT_SIDE_TABLE_COLOR }}>24h volume:</Text> $
+                  {normalizePrice((+listItem.volumeUsd24Hr).toFixed(3))}
                 </Text>
-                <Text style={styles.grayText}>
-                  Market cap: ${normalizePrice((+listItem.marketCapUsd).toFixed(3))}
+                <Text style={styles.contentText}>
+                  <Text style={{ color: LEFT_SIDE_TABLE_COLOR }}>Market cap:</Text> $
+                  {normalizePrice((+listItem.marketCapUsd).toFixed(3))}
                 </Text>
               </View>
             </View>
           </View>
 
           {props.editable && (
-            <TouchableOpacity onPress={askToDelete}>
+            <TouchableOpacity
+              onPress={askToDelete}
+              style={{
+                height: 16 + AREA * 2,
+                width: 16 + AREA * 2,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: -AREA,
+                marginTop: -AREA,
+              }}
+            >
               <Image
                 style={styles.closeBtn}
                 source={require('../../assets/icons/close.png')}
@@ -151,7 +182,7 @@ export const ListItem = (props: Props) => {
                     </Text>
                   </Text>
                 </View>
-                <View style={styles.deleteControlls}>
+                <View style={styles.deleteControls}>
                   <Button onClick={closeAskToDelete} style={styles.btnBorder}>
                     <Text style={styles.grayText}>No</Text>
                   </Button>
@@ -179,7 +210,7 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: '#fff',
     paddingVertical: 12,
-    paddingLeft: DRAG_GAP,
+    paddingLeft: 24 - AREA,
     paddingRight: 12,
     borderRadius: 15,
     justifyContent: 'space-between',
@@ -189,8 +220,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   closeBtn: {
-    width: 20,
-    height: 20,
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
   absoluteFit: {
     position: 'absolute',
@@ -216,7 +247,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   btnBorder: {
-    borderColor: '#cecece',
+    borderColor: GRAY,
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderLeftWidth: 1,
@@ -228,19 +259,22 @@ const styles = StyleSheet.create({
   grayText: {
     color: GRAY,
   },
+  contentText: {
+    color: DARK_GRAY,
+  },
   header: {
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
   },
-  deleteControlls: {
+  deleteControls: {
     flexDirection: 'row',
     gap: 15,
     alignItems: 'center',
   },
   dragIcon: {
-    width: 25,
-    height: 25,
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
   dragContainer: {
     width: 25,
