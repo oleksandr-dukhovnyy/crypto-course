@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     justifyContent: 'center',
     flexDirection: 'row',
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     paddingTop: 4,
 

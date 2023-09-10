@@ -11,7 +11,7 @@ interface Props {
 }
 
 // TODO: Remove magic value (topOffset)
-const topOffset = 280; // 194
+const topOffset = 275; // 194
 const diff = Dimensions.get('window').height - topOffset;
 const listHeight = diff < 0 ? 0 : diff;
 
@@ -89,14 +89,14 @@ export const List = (props: Props) => {
         <DraggableFlatList
           data={list}
           style={{
-            height: '100%',
-            minHeight: listHeight,
+            // height: '100%',
+            height: listHeight,
           }}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           onDragEnd={({ data }) => props.setList(data)}
         />
-        <View style={{ position: 'absolute', bottom: 0 }}>
+        <View style={{ position: 'absolute', bottom: 15 }}>
           <View style={{ height: 1 }} />
           <Copyright />
         </View>
