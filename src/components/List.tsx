@@ -1,12 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { ViewContext, ListContext } from '../contexts';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { View, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { ListItem } from './ListItem';
 import { Copyright } from './Copyright';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -19,8 +13,10 @@ interface Props {
 // TODO: Remove magic value (topOffset)
 const topOffset = 280; // 194
 const diff = Dimensions.get('window').height - topOffset;
-const listHeight: number = diff < 0 ? 0 : diff;
-const ICON_SIZE = 24;
+const listHeight = diff < 0 ? 0 : diff;
+
+const ICON_SIZE = 18;
+const ICON_AREA = 20;
 
 export const List = (props: Props) => {
   const { removeItemFromList } = props;
@@ -54,22 +50,40 @@ export const List = (props: Props) => {
     );
   };
 
+  const Icon = () => {
+    return (
+      <View>
+        <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleEditable}>
+          <Image
+            source={require(`../../assets/icons/edit.png`)}
+            style={[styles.actionIcon, { opacity: editable ? 1 : 0.6 }]}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return view === 'list' ? (
     <View style={{ flex: 1 }}>
       <View
         style={{
-          paddingBottom: 24,
+          marginTop: -12,
+          marginBottom: -2,
+          paddingBottom: ICON_AREA,
           width: '100%',
-          alignItems: 'flex-end',
-          opacity: editable ? 1 : 0.6,
+          alignItems: 'center',
+          // justifyContent: 'space-between',
+          justifyContent: 'flex-end',
+          flexDirection: 'row',
+          paddingHorizontal: 30,
         }}
       >
-        <TouchableWithoutFeedback onPress={() => setEditable(!editable)}>
-          <Image
-            source={require(`../../assets/icons/edit.png`)}
-            style={{ marginRight: 24, height: ICON_SIZE, width: ICON_SIZE }}
-          />
-        </TouchableWithoutFeedback>
+        {/*
+        <Icon /> 
+        <Icon /> 
+        <Icon />
+        */}
+        <Icon />
       </View>
       <View style={styles.list}>
         <DraggableFlatList
@@ -103,5 +117,16 @@ const styles = StyleSheet.create({
     // borderTopWidth: 1,
     // borderLeftWidth: 1,
     // borderRightWidth: 1,
+  },
+  actionIconWrapper: {
+    width: ICON_SIZE + ICON_AREA * 2,
+    height: ICON_SIZE + ICON_AREA * 2,
+    marginVertical: -ICON_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionIcon: {
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
 });

@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingRight: 10,
     paddingLeft: 15,
+    height: 52,
   },
   searchIcon: {
     width: 25,
