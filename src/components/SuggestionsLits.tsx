@@ -44,6 +44,7 @@ export const SuggestionsList = (props: Props) => {
             //
             data={list}
             keyExtractor={keyExtractor}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item: suggestion, index: i }) => (
               <View key={suggestion.id}>
                 <TouchableOpacity
@@ -98,25 +99,31 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 15,
-    // height: 450, // 340
-    // flex: 1,
   },
   hr: {
     width: '100%',
-    backgroundColor: '#cecece',
-    height: 1,
+    borderTopWidth: 1,
+    borderTopColor: colors.dark.background,
+    height: 0,
+  },
+  disabledText: {
+    color: colors.light.red,
   },
 };
 
 const darkStyles: StyleSheet.NamedStyles<any> = {
   suggestionsListContain: {
     ...lightStyles.suggestionsListContain,
-    backgroundColor: '#5e5e5e',
+    backgroundColor: colors.dark.background, //'#5e5e5e',
+  },
+  hr: {
+    ...lightStyles.hr,
+    borderTopColor: '#cecece',
   },
   suggestionName: {
-    color: colors.dark.white,
+    color: '#fff',
   },
   disabledText: {
-    color: colors.dark.white,
+    color: colors.dark.red,
   },
 };

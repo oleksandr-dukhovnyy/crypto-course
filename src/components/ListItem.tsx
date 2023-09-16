@@ -59,7 +59,15 @@ export const ListItem = (props: Props) => {
 
   useEffect(() => {
     setPriceColor(
-      listItem._diff > 0 ? GREEN : listItem._diff < 0 ? RED : DEFAULT_PRICE_COLOR,
+      listItem._diff > 0
+        ? theme === 'light'
+          ? '#1abf3e'
+          : GREEN
+        : listItem._diff < 0
+        ? theme === 'light'
+          ? RED
+          : colors.dark.red
+        : DEFAULT_PRICE_COLOR,
     );
 
     clearTimeout(priceTimeout);
@@ -174,7 +182,7 @@ export const ListItem = (props: Props) => {
             <AnimatedFadeIn style={styles.deleteContain} duration={100}>
               <>
                 <View style={styles.deleteQuestion}>
-                  <Text style={{ color: RED }}>Remove?</Text>
+                  <Text style={styles.deletionConfirmationText}>Remove?</Text>
                   <Text>
                     <Text style={[{ fontWeight: '700' }, styles.deletionText]}>
                       {listItem.symbol} ({listItem.name})
@@ -189,7 +197,9 @@ export const ListItem = (props: Props) => {
                     onClick={removeItemFromList.bind(null, listItem.id)}
                     style={styles.btnBorder}
                   >
-                    <Text style={{ color: RED }}>Yes</Text>
+                    <Text style={{ color: styles.deletionConfirmationText.color }}>
+                      Yes
+                    </Text>
                   </Button>
                 </View>
               </>
@@ -291,6 +301,9 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     marginTop: 'auto',
     marginBottom: 'auto',
   },
+  deletionConfirmationText: {
+    color: colors.light.red,
+  },
 };
 
 const darkStyles: StyleSheet.NamedStyles<any> = {
@@ -300,7 +313,7 @@ const darkStyles: StyleSheet.NamedStyles<any> = {
   },
   name: {
     ...lightStyles.name,
-    color: colors.dark.white,
+    color: '#fff',
   },
   deleteContain: {
     ...lightStyles.deleteContain,
@@ -313,5 +326,9 @@ const darkStyles: StyleSheet.NamedStyles<any> = {
   deletionText: {
     ...lightStyles.deletionText,
     color: colors.dark.white,
+  },
+  deletionConfirmationText: {
+    ...lightStyles.deletionConfirmationText,
+    color: colors.dark.red,
   },
 };

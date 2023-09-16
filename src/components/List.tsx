@@ -57,8 +57,13 @@ export const List = (props: Props) => {
       <View>
         <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleEditable}>
           <Image
-            source={require('../../assets/icons/edit.png')}
+            source={
+              theme === 'light'
+                ? require('../../assets/icons/edit.png')
+                : require('../../assets/icons/edit-dark.png')
+            }
             style={[styles.actionIcon, { opacity: editable ? 0.6 : 1 }]}
+            // style={styles.actionIcon}
           />
         </TouchableOpacity>
       </View>
@@ -70,8 +75,12 @@ export const List = (props: Props) => {
       <View>
         <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleDarkMode}>
           <Image
-            style={[styles.actionIcon, { opacity: theme === 'dark' ? 0.6 : 1 }]}
-            source={require('../../assets/icons/moon.png')}
+            style={styles.actionIcon}
+            source={
+              theme === 'light'
+                ? require('../../assets/icons/moon.png')
+                : require('../../assets/icons/moon-dark.png')
+            }
           />
         </TouchableOpacity>
       </View>

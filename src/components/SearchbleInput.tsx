@@ -189,7 +189,9 @@ export const SearchbleInput = (props: Props) => {
               style={styles.clearBtn}
               onClick={() => (value.length ? clearValue() : cancelSearch())}
             >
-              <Text style={styles.freeText}>{value.length ? 'clear' : 'close'}</Text>
+              <Text style={[styles.freeText, styles.resetButtonText]}>
+                {value.length ? 'clear' : 'close'}
+              </Text>
             </Button>
           </AnimatedFadeIn>
         ) : null}
@@ -258,7 +260,7 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
   },
   hr: {
     width: '100%',
-    backgroundColor: '#cecece',
+    backgroundColor: '#bbb',
     height: 1,
   },
   form: {
@@ -279,6 +281,9 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     width: 25,
     height: 25,
   },
+  resetButtonText: {
+    color: '#000',
+  },
 };
 
 const darkStyles: StyleSheet.NamedStyles<any> = {
@@ -288,10 +293,14 @@ const darkStyles: StyleSheet.NamedStyles<any> = {
   },
   input: {
     ...lightStyles.input,
-    backgroundColor: '#5e5e5e',
+    // backgroundColor: '#5e5e5e',
+    backgroundColor: colors.dark.background,
     color: colors.dark.white,
 
     // @ts-ignore
     _placeholderTextColor: '#aaa',
+  },
+  resetButtonText: {
+    color: '#fff',
   },
 };
