@@ -9,7 +9,12 @@ import API from './src/utils/API';
 import store from './src/utils/store';
 import { markAlreadyAddeds } from './src/utils/markAlreadyAddeds';
 import normalizeAssetList from './src/utils/normalizeAssetList';
-import { ListContext, DefaultsListContext, ViewContext } from './src/contexts';
+import {
+  ListContext,
+  DefaultsListContext,
+  ViewContext,
+  ThemeContext,
+} from './src/contexts';
 import { initModuleLogger } from './src/utils/logs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -19,7 +24,7 @@ const defaultAssets = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin'];
 const LIST_STORE_KEY = 'list';
 const FIRST_BOOT_KEY = 'booted-before.v5';
 
-const DEFAULT_ASSETS_COUNT = 20; // <=55 - no laggs
+const DEFAULT_ASSETS_COUNT = 20; // Then DEFAULT_ASSETS_COUNT < 55 - no have "freezes"
 
 // const getId = (() => {
 //   let id = 0;
@@ -30,6 +35,7 @@ export default function App() {
   const [list, setList] = useState<Asset.Item[]>([]);
   const [defaultList, setDefaultList] = useState<Asset.Item[]>([]);
   const [view, setView] = useState<App.View>('list');
+  const [theme, setTheme] = useState<App.Theme>('light');
 
   const updateListInStore = (newList: Asset.Item[], initiator: string = '-') => {
     // const id = getId();
@@ -204,12 +210,17 @@ export default function App() {
     setDefaultList(markAlreadyAddeds(defaultList, list));
   }, [list]);
 
+  const gradientColors: { [key: string]: string[] } = {
+    light: ['rgba(255,183,63,1)', 'rgba(230,103,255,1)', 'rgba(139,224,255,1)'],
+    dark: ['rgba(255,183,63,0.3)', 'rgba(230,103,255,0.3)', 'rgba(139,224,255,0.3)'],
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <StatusBar animated={true} showHideTransition={'fade'} hidden={true} />
         <LinearGradient
-          colors={['rgba(255,183,63,1)', 'rgba(230,103,255,1)', 'rgba(139,224,255,1)']}
+          colors={gradientColors.light}
           locations={[0, 0.37, 1]}
           start={{ x: 0.2, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -219,15 +230,21 @@ export default function App() {
             // style={[styles.container, list.length ? {} : styles['container--empty']]}
             style={styles.container}
           >
-            <ListContext.Provider value={list}>
-              <DefaultsListContext.Provider value={defaultList}>
-                <ViewContext.Provider value={view}>
-                  <Navbar appName={AppJSON.expo.name} />
-                  <AddItemForm addItem={addItem} setView={setView} />
-                  <List removeItemFromList={removeItemFromList} setList={_setList} />
-                </ViewContext.Provider>
-              </DefaultsListContext.Provider>
-            </ListContext.Provider>
+            <ThemeContext.Provider value={theme}>
+              <ListContext.Provider value={list}>
+                <DefaultsListContext.Provider value={defaultList}>
+                  <ViewContext.Provider value={view}>
+                    <Navbar appName={AppJSON.expo.name} />
+                    <AddItemForm addItem={addItem} setView={setView} />
+                    <List
+                      removeItemFromList={removeItemFromList}
+                      setList={_setList}
+                      setTheme={setTheme}
+                    />
+                  </ViewContext.Provider>
+                </DefaultsListContext.Provider>
+              </ListContext.Provider>
+            </ThemeContext.Provider>
           </SafeAreaView>
         </LinearGradient>
       </View>

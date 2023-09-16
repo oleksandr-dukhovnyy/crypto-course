@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,6 +10,8 @@ import {
 import { Button } from './Button';
 import normalizePrice from '../utils/normalizePrice';
 import { AnimatedFadeIn } from './Animated';
+import { ThemeContext } from '../contexts';
+import { colors } from '../styles';
 
 const GREEN = '#1dd648';
 const RED = '#fe0000';
@@ -35,6 +37,7 @@ const AREA = 12;
 const ICON_SIZE = 16;
 
 export const ListItem = (props: Props) => {
+  const theme = useContext(ThemeContext);
   const { listItem, removeItemFromList } = props;
   const [deletionConfirmation, setDeletionConfirmation] = useState(false);
   const [priceColor, setPriceColor] = useState(DEFAULT_PRICE_COLOR);
@@ -62,6 +65,11 @@ export const ListItem = (props: Props) => {
     clearTimeout(priceTimeout);
     priceTimeout = window.setTimeout(setPriceColor.bind(null, DEFAULT_PRICE_COLOR), 1200);
   }, [listItem.priceUsd]);
+
+  const styles =
+    theme === 'light'
+      ? StyleSheet.create(lightStyles)
+      : StyleSheet.create({ ...lightStyles, ...darkStyles });
 
   return (
     <TouchableWithoutFeedback onLongPress={props.toggleEditable}>
@@ -100,16 +108,7 @@ export const ListItem = (props: Props) => {
 
             <View>
               <View style={styles.header}>
-                <Text
-                  style={{
-                    fontWeight: '700',
-                    fontSize: 17,
-                    opacity: listItem._freshData ? 1 : 0.3,
-                    flex: 1,
-                    minWidth: 250,
-                    // lineHeight: 17
-                  }}
-                >
+                <Text style={[styles.name, { opacity: listItem._freshData ? 1 : 0.3 }]}>
                   {listItem.symbol} ({listItem.name})
                 </Text>
               </View>
@@ -202,13 +201,13 @@ export const ListItem = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const lightStyles: StyleSheet.NamedStyles<any> = {
   contain: {
     position: 'relative',
     marginBottom: 14,
   },
   listItem: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.light.background,
     paddingVertical: 12,
     paddingLeft: 24 - AREA,
     paddingRight: 12,
@@ -218,6 +217,12 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
+  },
+  name: {
+    fontWeight: '700',
+    fontSize: 17,
+    flex: 1,
+    minWidth: 250,
   },
   closeBtn: {
     width: ICON_SIZE,
@@ -233,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 15,
-    backgroundColor: '#fffffff0',
+    backgroundColor: colors.light.background + 'f0',
     borderRadius: 15,
     width: '100%',
     height: '100%',
@@ -286,4 +291,27 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     marginBottom: 'auto',
   },
-});
+};
+
+const darkStyles: StyleSheet.NamedStyles<any> = {
+  listItem: {
+    ...lightStyles.listItem,
+    backgroundColor: colors.dark.background,
+  },
+  name: {
+    ...lightStyles.name,
+    color: colors.dark.white,
+  },
+  deleteContain: {
+    ...lightStyles.deleteContain,
+    backgroundColor: colors.dark.background + 'f0',
+  },
+  grayText: {
+    ...lightStyles.grayText,
+    color: colors.dark.background,
+  },
+  deletionText: {
+    ...lightStyles.deletionText,
+    color: colors.dark.white,
+  },
+};

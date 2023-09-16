@@ -70,6 +70,9 @@ export const SuggestionsList = (props: Props) => {
   );
 };
 
+//
+// const lightStyles: StyleSheet.NamedStyles<any>;
+
 const styles = StyleSheet.create({
   suggestionsList: {
     position: 'relative',

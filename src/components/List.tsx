@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { ViewContext, ListContext } from '../contexts';
-import { View, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { ViewContext, ListContext, ThemeContext } from '../contexts';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { ListItem } from './ListItem';
 import { Copyright } from './Copyright';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -8,25 +8,27 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 interface Props {
   removeItemFromList(id: string): void;
   setList(newList: Asset.Item[]): Promise<void>;
+  setTheme(theme: App.Theme): void;
 }
-
-// TODO: Remove magic value (topOffset)
-const topOffset = 275; // 194
-const diff = Dimensions.get('window').height - topOffset;
-const listHeight = diff < 0 ? 0 : diff;
-
-const ICON_SIZE = 18;
-const ICON_AREA = 20;
 
 export const List = (props: Props) => {
   const { removeItemFromList } = props;
   const view = useContext(ViewContext);
   const list = useContext(ListContext);
+  const theme = useContext(ThemeContext);
   const [editable, setEditable] = useState<boolean>(false);
 
   const toggleEditable = () => {
     setEditable(!editable);
   };
+
+  const toggleDarkMode = () => {
+    props.setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  function keyExtractor(item: Asset.Item): string {
+    return item.id;
+  }
 
   const renderItem = ({
     item,
@@ -50,12 +52,12 @@ export const List = (props: Props) => {
     );
   };
 
-  const Icon = () => {
+  const IconEdit = () => {
     return (
       <View>
         <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleEditable}>
           <Image
-            source={require(`../../assets/icons/edit.png`)}
+            source={require('../../assets/icons/edit.png')}
             style={[styles.actionIcon, { opacity: editable ? 1 : 0.6 }]}
           />
         </TouchableOpacity>
@@ -63,70 +65,86 @@ export const List = (props: Props) => {
     );
   };
 
-  return view === 'list' ? (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          marginTop: -12,
-          marginBottom: -2,
-          paddingBottom: ICON_AREA,
-          width: '100%',
-          alignItems: 'center',
-          // justifyContent: 'space-between',
-          justifyContent: 'flex-end',
-          flexDirection: 'row',
-          paddingHorizontal: 30,
-        }}
-      >
-        {/*
-        <Icon /> 
-        <Icon /> 
-        <Icon />
-        */}
-        <Icon />
+  const IconThemeToggle = () => {
+    const iconStyle: { [key: string]: any }[] = [styles.actionIcon];
+
+    if (theme === 'dark') {
+      iconStyle.push({
+        transform: [{ rotate: '250deg' }],
+      });
+    }
+
+    return (
+      <View>
+        <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleDarkMode}>
+          <Image
+            style={iconStyle}
+            source={
+              theme === 'dark'
+                ? require('../../assets/icons/moon.png')
+                : require('../../assets/icons/sun.png')
+            }
+          />
+        </TouchableOpacity>
       </View>
-      <View style={styles.list}>
+    );
+  };
+
+  return view === 'list' ? (
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <IconThemeToggle />
+        <IconEdit />
+      </View>
+      <View style={styles.listContainer}>
         <DraggableFlatList
           data={list}
-          style={{
-            // height: '100%',
-            height: listHeight,
-          }}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={keyExtractor}
           onDragEnd={({ data }) => props.setList(data)}
+          showsVerticalScrollIndicator={false}
         />
-        <View style={{ position: 'absolute', bottom: 15 }}>
-          <View style={{ height: 1 }} />
-          <Copyright />
-        </View>
+      </View>
+      <View style={styles.footerContainer}>
+        <Copyright />
       </View>
     </View>
   ) : null;
 };
 
 const styles = StyleSheet.create({
-  list: {
-    flexDirection: 'column',
-    position: 'relative',
-    gap: 14,
-    minHeight: listHeight,
-    paddingBottom: 65, // 90
-    // borderColor: 'red',
-    // borderBottomWidth: 1,
-    // borderTopWidth: 1,
-    // borderLeftWidth: 1,
-    // borderRightWidth: 1,
+  container: {
+    flex: 1,
+  },
+  iconContainer: {
+    gap: 24,
+    marginBottom: 8,
+    paddingBottom: 20,
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    paddingHorizontal: 30,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  footerContainer: {
+    height: 20,
+    // marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: '#c2c2c2',
   },
   actionIconWrapper: {
-    width: ICON_SIZE + ICON_AREA * 2,
-    height: ICON_SIZE + ICON_AREA * 2,
-    marginVertical: -ICON_SIZE,
-    justifyContent: 'center',
+    width: 58,
+    height: 58,
+    marginVertical: -29,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   actionIcon: {
-    width: ICON_SIZE,
-    height: ICON_SIZE,
+    width: 18,
+    height: 18,
   },
 });
+
+export default List;

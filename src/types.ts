@@ -26,6 +26,7 @@ declare namespace Asset {
 
 declare namespace App {
   export type View = 'list' | 'search';
+  export type Theme = 'light' | 'dark';
 
   export interface StylesList {
     [key: string]: string | number;

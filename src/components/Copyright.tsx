@@ -1,12 +1,17 @@
+import React, { useContext } from 'react';
+import { ThemeContext } from '../contexts';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { colors } from '../styles';
 
-const color = '#fff'; // #eee
-
-const offset = 75;
-const magic = 20;
-const width = Dimensions.get('window').width - offset * 2 - magic;
+const width = Dimensions.get('window').width - 130;
 
 export const Copyright = () => {
+  const theme = useContext(ThemeContext);
+  // const styles = StyleSheet.create(
+  //   theme === 'light' ? lightStyles : { ...lightStyles, ...darkStyles },
+  // );
+  const styles = StyleSheet.create(lightStyles);
+
   return (
     <View style={styles.copyright}>
       <Text style={styles.copyrightText}>ⓒ</Text>
@@ -15,24 +20,27 @@ export const Copyright = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const lightStyles: StyleSheet.NamedStyles<any> = {
   copyright: {
-    borderTopColor: color,
-    borderTopWidth: 1,
-    marginVertical: 15,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    // position: 'absolute',
-    bottom: 0,
-    paddingTop: 4,
-
-    marginHorizontal: 'auto',
     width,
-    left: offset,
+    bottom: 0,
+    lineHeight: 1,
+    paddingTop: 4,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopColor: '#fff',
+    justifyContent: 'center',
   },
   copyrightText: {
-    color,
     fontSize: 13,
+    color: colors.light.white,
   },
-});
+};
+
+// const darkStyles: StyleSheet.NamedStyles<any> = {
+//   // copyrightText: {
+//   //   ...lightStyles.copyrightText,
+//   //   color: colors.dark.background,
+//   // },
+// };

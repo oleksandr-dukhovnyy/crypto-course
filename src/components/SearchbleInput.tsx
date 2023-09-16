@@ -12,8 +12,9 @@ import {
 import { AnimatedFadeIn } from './Animated';
 import { Button } from './Button';
 import { SuggestionsList } from './SuggestionsLits';
-import { ViewContext, DefaultsListContext } from '../contexts';
+import { ViewContext, DefaultsListContext, ThemeContext } from '../contexts';
 import { getLogs } from '../utils/logs';
+import { colors } from '../styles';
 
 const minSymbs = 2;
 
@@ -27,26 +28,6 @@ interface Props {
   cleanSearchResults(): void;
   setView(view: App.View): void;
 }
-
-const Loading = ({ loading, value }: { loading: boolean; value: string }) => (
-  <>
-    {loading ? (
-      <Text style={styles.freeText}>Loading...</Text>
-    ) : (
-      <>
-        {value.trim().length >= minSymbs ? (
-          <Text style={styles.freeText}>
-            Data by query "{value.trim()}" was not found...
-          </Text>
-        ) : (
-          <Text style={styles.freeText}>
-            Enter more that {minSymbs} symbols to search
-          </Text>
-        )}
-      </>
-    )}
-  </>
-);
 
 export const SearchbleInput = (props: Props) => {
   const {
@@ -65,6 +46,7 @@ export const SearchbleInput = (props: Props) => {
 
   const view = useContext(ViewContext);
   const defaultList = useContext(DefaultsListContext);
+  const theme = useContext(ThemeContext);
 
   // TODO: Remove magic value (topOffset)
   const topOffset = 185;
@@ -142,6 +124,33 @@ export const SearchbleInput = (props: Props) => {
     }
   }, [value]);
 
+  const styles =
+    theme === 'light'
+      ? StyleSheet.create(lightStyles)
+      : StyleSheet.create({ ...lightStyles, ...darkStyles });
+
+  const Loading = ({ loading, value }: { loading: boolean; value: string }) => {
+    return (
+      <>
+        {loading ? (
+          <Text style={styles.freeText}>Loading...</Text>
+        ) : (
+          <>
+            {value.trim().length >= minSymbs ? (
+              <Text style={styles.freeText}>
+                Data by query "{value.trim()}" was not found...
+              </Text>
+            ) : (
+              <Text style={styles.freeText}>
+                Enter more that {minSymbs} symbols to search
+              </Text>
+            )}
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <View style={styles.contain}>
       <View style={[styles.form, focused ? {} : { paddingRight: 15 }]}>
@@ -150,7 +159,11 @@ export const SearchbleInput = (props: Props) => {
             {focused ? (
               <Image
                 style={styles.searchIcon}
-                source={require(`../../assets/icons/search-active.png`)}
+                source={
+                  theme === 'light'
+                    ? require('../../assets/icons/search-active.png')
+                    : require('../../assets/icons/search-active-dark.png')
+                }
               />
             ) : (
               <Image
@@ -161,7 +174,8 @@ export const SearchbleInput = (props: Props) => {
             <TextInput
               ref={inputRef}
               value={value}
-              style={style}
+              style={[style, { color: styles.input.color }]}
+              placeholderTextColor={styles.input._placeholderTextColor}
               onChangeText={setSearch}
               // onEndEditing={onEndEditing}
               onFocus={onFocus}
@@ -204,7 +218,7 @@ export const SearchbleInput = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const lightStyles: StyleSheet.NamedStyles<any> = {
   suggestionsListContain: {
     backgroundColor: '#fff',
     paddingVertical: 15,
@@ -265,4 +279,19 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-});
+};
+
+const darkStyles: StyleSheet.NamedStyles<any> = {
+  suggestionsListContain: {
+    ...lightStyles.suggestionsListContain,
+    backgroundColor: colors.dark.background,
+  },
+  input: {
+    ...lightStyles.input,
+    backgroundColor: '#5e5e5e',
+    color: colors.dark.white,
+
+    // @ts-ignore
+    _placeholderTextColor: colors.dark.white,
+  },
+};
