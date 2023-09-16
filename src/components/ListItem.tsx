@@ -207,7 +207,7 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     marginBottom: 14,
   },
   listItem: {
-    backgroundColor: colors.light.background,
+    backgroundColor: '#fff', // '#fafafa',
     paddingVertical: 12,
     paddingLeft: 24 - AREA,
     paddingRight: 12,

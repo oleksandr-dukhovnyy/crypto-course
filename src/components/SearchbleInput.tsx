@@ -292,6 +292,6 @@ const darkStyles: StyleSheet.NamedStyles<any> = {
     color: colors.dark.white,
 
     // @ts-ignore
-    _placeholderTextColor: colors.dark.white,
+    _placeholderTextColor: '#aaa',
   },
 };

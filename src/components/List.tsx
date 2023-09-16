@@ -58,7 +58,7 @@ export const List = (props: Props) => {
         <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleEditable}>
           <Image
             source={require('../../assets/icons/edit.png')}
-            style={[styles.actionIcon, { opacity: editable ? 1 : 0.6 }]}
+            style={[styles.actionIcon, { opacity: editable ? 0.6 : 1 }]}
           />
         </TouchableOpacity>
       </View>
@@ -66,24 +66,12 @@ export const List = (props: Props) => {
   };
 
   const IconThemeToggle = () => {
-    const iconStyle: { [key: string]: any }[] = [styles.actionIcon];
-
-    if (theme === 'dark') {
-      iconStyle.push({
-        transform: [{ rotate: '250deg' }],
-      });
-    }
-
     return (
       <View>
         <TouchableOpacity style={styles.actionIconWrapper} onPress={toggleDarkMode}>
           <Image
-            style={iconStyle}
-            source={
-              theme === 'dark'
-                ? require('../../assets/icons/moon.png')
-                : require('../../assets/icons/sun.png')
-            }
+            style={[styles.actionIcon, { opacity: theme === 'dark' ? 0.6 : 1 }]}
+            source={require('../../assets/icons/moon.png')}
           />
         </TouchableOpacity>
       </View>
@@ -132,6 +120,7 @@ const styles = StyleSheet.create({
     // marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 14,
     // backgroundColor: '#c2c2c2',
   },
   actionIconWrapper: {
