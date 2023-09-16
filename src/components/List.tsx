@@ -117,11 +117,9 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     height: 20,
-    // marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 14,
-    // backgroundColor: '#c2c2c2',
   },
   actionIconWrapper: {
     width: 58,

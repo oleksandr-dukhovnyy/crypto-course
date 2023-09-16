@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   VirtualizedList,
 } from 'react-native';
 import { Shadow } from 'react-native-shadow-2';
+import { ThemeContext } from '../contexts';
+import { colors } from '../styles';
 
 interface Props {
   list: Asset.Item[];
@@ -17,6 +19,7 @@ interface Props {
 
 export const SuggestionsList = (props: Props) => {
   const { list, selectItem, height = 450 } = props;
+  const theme = useContext(ThemeContext);
 
   function keyExtractor({ id }: Asset.Item) {
     return id;
@@ -24,6 +27,10 @@ export const SuggestionsList = (props: Props) => {
 
   const getItemCount = () => list.length;
   const getItem = (_data: any, index: number) => list[index];
+
+  const styles = StyleSheet.create(
+    theme === 'light' ? lightStyles : { ...lightStyles, ...darkStyles },
+  );
 
   return (
     <KeyboardAvoidingView style={styles.suggestionsList}>
@@ -48,6 +55,7 @@ export const SuggestionsList = (props: Props) => {
                     <Text
                       style={{
                         opacity: suggestion.disabledText ? 0.3 : 1,
+                        ...styles.suggestionName,
                       }}
                     >
                       {`${suggestion.symbol} (${
@@ -56,7 +64,7 @@ export const SuggestionsList = (props: Props) => {
                     </Text>
 
                     {suggestion.disabledText ? (
-                      <Text>{suggestion.disabledText}</Text>
+                      <Text style={styles.disabledText}>{suggestion.disabledText}</Text>
                     ) : null}
                   </View>
                 </TouchableOpacity>
@@ -71,9 +79,7 @@ export const SuggestionsList = (props: Props) => {
 };
 
 //
-// const lightStyles: StyleSheet.NamedStyles<any>;
-
-const styles = StyleSheet.create({
+const lightStyles: StyleSheet.NamedStyles<any> = {
   suggestionsList: {
     position: 'relative',
     top: 0,
@@ -100,4 +106,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#cecece',
     height: 1,
   },
-});
+};
+
+const darkStyles: StyleSheet.NamedStyles<any> = {
+  suggestionsListContain: {
+    ...lightStyles.suggestionsListContain,
+    backgroundColor: '#5e5e5e',
+  },
+  suggestionName: {
+    color: colors.dark.white,
+  },
+  disabledText: {
+    color: colors.dark.white,
+  },
+};
