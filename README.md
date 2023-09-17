@@ -12,11 +12,7 @@
   <img src="./docs/screenshot-4.jpg" alt="app screenshot" height="500">
   <img src="./docs/screenshot-5.jpg" alt="app screenshot" height="500">
   <img src="./docs/screenshot-6.jpg" alt="app screenshot" height="500">
-</p>
-
----
-
-<p float="left">
+  <br />
   <img src="./docs/screenshot-7.jpg" alt="app screenshot" height="500">
   <img src="./docs/screenshot-8.jpg" alt="app screenshot" height="500">
   <img src="./docs/screenshot-9.jpg" alt="app screenshot" height="500">
