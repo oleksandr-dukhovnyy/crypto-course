@@ -1,6 +1,6 @@
 {
   "name": "crypto-course",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "ts:check": "tsc",

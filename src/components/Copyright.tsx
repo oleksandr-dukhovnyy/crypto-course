@@ -31,6 +31,7 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     alignItems: 'center',
     borderTopColor: colors.dark.white,
     justifyContent: 'center',
+    marginBottom: -3,
   },
   copyrightText: {
     fontSize: 13,
