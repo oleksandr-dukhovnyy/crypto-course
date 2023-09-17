@@ -55,6 +55,10 @@ export const ListItem = (props: Props) => {
     timeoutId = window.setTimeout(closeAskToDelete, removeConfirmationHideTimeout);
   };
 
+  const onPress = () => {
+    if (props.editable) props.toggleEditable();
+  };
+
   let priceTimeout: undefined | number;
 
   useEffect(() => {
@@ -80,7 +84,7 @@ export const ListItem = (props: Props) => {
       : StyleSheet.create({ ...lightStyles, ...darkStyles });
 
   return (
-    <TouchableWithoutFeedback onLongPress={props.toggleEditable}>
+    <TouchableWithoutFeedback onLongPress={props.toggleEditable} onPress={onPress}>
       <View style={styles.contain}>
         <View style={styles.listItem}>
           <View style={{ flexDirection: 'row', gap: 24 - AREA }}>
@@ -214,7 +218,7 @@ export const ListItem = (props: Props) => {
 const lightStyles: StyleSheet.NamedStyles<any> = {
   contain: {
     position: 'relative',
-    marginBottom: 14,
+    marginBottom: 12,
   },
   listItem: {
     backgroundColor: '#fff', // '#fafafa',
@@ -248,6 +252,8 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 15,
+    paddingLeft: 24,
+    paddingRight: 24,
     backgroundColor: colors.light.background + 'f0',
     borderRadius: 15,
     width: '100%',
@@ -267,6 +273,8 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
     borderTopWidth: 1,
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    height: 45,
+    width: 65,
   },
   deleteQuestion: {
     flex: 1,
@@ -284,7 +292,7 @@ const lightStyles: StyleSheet.NamedStyles<any> = {
   },
   deleteControls: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 20,
     alignItems: 'center',
   },
   dragIcon: {
