@@ -1,6 +1,6 @@
 # Crypto Course
 
-(react-native, expo, typescript, metro, eas (CI), WebSocket, eslint, prettier, babel)
+(React Native, Expo, TypeScript, Metro, EAS (CI), WebSocket, Eslint, Prettier, Babel)
 
 - [Download .apk build (android, 26.0 MB)](https://github.com/Aleksandr-JS-Developer/crypto-course/releases/download/2.0.2/android-build.v2.0.2.apk)
 
